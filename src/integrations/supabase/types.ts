@@ -14,16 +14,221 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pricing_config: {
+        Row: {
+          copper_price_usd: number
+          deduction_percent: number
+          fee_percent: number
+          id: number
+          updated_at: string
+          usd_rate: number
+        }
+        Insert: {
+          copper_price_usd?: number
+          deduction_percent?: number
+          fee_percent?: number
+          id?: number
+          updated_at?: string
+          usd_rate?: number
+        }
+        Update: {
+          copper_price_usd?: number
+          deduction_percent?: number
+          fee_percent?: number
+          id?: number
+          updated_at?: string
+          usd_rate?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          national_id: string | null
+          phone: string | null
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          national_id?: string | null
+          phone?: string | null
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          national_id?: string | null
+          phone?: string | null
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      shipments: {
+        Row: {
+          address: string
+          created_at: string
+          description: string | null
+          estimated_price: number
+          estimated_weight: number
+          expert_id: string | null
+          expert_notes: string | null
+          final_price: number | null
+          final_weight: number | null
+          id: string
+          photos: string[]
+          purity_percent: number
+          reject_reason: string | null
+          scrap_type: Database["public"]["Enums"]["scrap_type"]
+          seller_id: string
+          status: Database["public"]["Enums"]["shipment_status"]
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          description?: string | null
+          estimated_price?: number
+          estimated_weight: number
+          expert_id?: string | null
+          expert_notes?: string | null
+          final_price?: number | null
+          final_weight?: number | null
+          id?: string
+          photos?: string[]
+          purity_percent?: number
+          reject_reason?: string | null
+          scrap_type: Database["public"]["Enums"]["scrap_type"]
+          seller_id: string
+          status?: Database["public"]["Enums"]["shipment_status"]
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          description?: string | null
+          estimated_price?: number
+          estimated_weight?: number
+          expert_id?: string | null
+          expert_notes?: string | null
+          final_price?: number | null
+          final_weight?: number | null
+          id?: string
+          photos?: string[]
+          purity_percent?: number
+          reject_reason?: string | null
+          scrap_type?: Database["public"]["Enums"]["scrap_type"]
+          seller_id?: string
+          status?: Database["public"]["Enums"]["shipment_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          shipment_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          shipment_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          shipment_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallets: {
+        Row: {
+          balance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "seller" | "expert" | "admin"
+      scrap_type: "coated_cable" | "burnt" | "shavings" | "body" | "other"
+      shipment_status:
+        | "registered"
+        | "awaiting_expert"
+        | "price_offered"
+        | "seller_approved"
+        | "weighed"
+        | "settled"
+        | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +355,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["seller", "expert", "admin"],
+      scrap_type: ["coated_cable", "burnt", "shavings", "body", "other"],
+      shipment_status: [
+        "registered",
+        "awaiting_expert",
+        "price_offered",
+        "seller_approved",
+        "weighed",
+        "settled",
+        "rejected",
+      ],
+    },
   },
 } as const
