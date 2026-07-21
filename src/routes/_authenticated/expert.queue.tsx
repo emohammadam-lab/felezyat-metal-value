@@ -62,7 +62,6 @@ function ShipmentCard({ s, pricing, onDone }: any) {
     const { data: u } = await supabase.auth.getUser();
     const { error } = await supabase.from("shipments").update({
       purity_percent: finalPurity,
-      deduction_percent: deduction,
       final_price: finalPrice,
       expert_id: u.user?.id,
       status: "price_offered",
@@ -81,7 +80,7 @@ function ShipmentCard({ s, pricing, onDone }: any) {
       copperUsd: Number(pricing.copper_price_usd),
       usdRate: Number(pricing.usd_rate),
       feePercent: Number(pricing.fee_percent ?? 0),
-      deductionPercent: Number(s.deduction_percent || deduction),
+      deductionPercent: Number(deduction),
     }) : 0;
     const { error } = await supabase.from("shipments").update({
       actual_estimated_weight: actualWeight,
@@ -107,7 +106,7 @@ function ShipmentCard({ s, pricing, onDone }: any) {
           </div>
           <div className="text-xs text-muted-foreground mt-1">{formatDate(s.created_at)}</div>
           {s.address && <div className="text-sm mt-2">{s.address}</div>}
-          {s.notes && <div className="text-xs mt-1 text-muted-foreground">یادداشت: {s.notes}</div>}
+          {s.description && <div className="text-xs mt-1 text-muted-foreground">یادداشت: {s.description}</div>}
         </div>
         <div className="text-left">
           <span className={"text-xs px-2 py-1 rounded-full inline-block mb-2 " + (STATUS_TONE[s.status] || "bg-secondary")}>{STATUS_LABELS[s.status]}</span>
