@@ -43,13 +43,13 @@ function Queue() {
 }
 
 function ShipmentCard({ s, pricing, onDone }: any) {
-  const [finalPurity, setFinalPurity] = useState(s.estimated_purity_percent || 70);
-  const [deduction, setDeduction] = useState(Number(pricing?.default_deduction_percent ?? 8));
-  const [actualWeight, setActualWeight] = useState(s.actual_weight_kg || s.weight_kg);
+  const [finalPurity, setFinalPurity] = useState(s.purity_percent || 70);
+  const [deduction, setDeduction] = useState(Number(pricing?.deduction_percent ?? 8));
+  const [actualWeight, setActualWeight] = useState(s.actual_estimated_weight || s.estimated_weight);
   const [loading, setLoading] = useState(false);
 
   const finalPrice = pricing ? calcEstimatedPrice({
-    weightKg: Number(actualWeight || s.weight_kg),
+    weightKg: Number(actualWeight || s.estimated_weight),
     purityPercent: Number(finalPurity),
     copperUsd: Number(pricing.copper_price_usd),
     usdRate: Number(pricing.usd_rate),
@@ -61,9 +61,9 @@ function ShipmentCard({ s, pricing, onDone }: any) {
     setLoading(true);
     const { data: u } = await supabase.auth.getUser();
     const { error } = await supabase.from("shipments").update({
-      final_purity_percent: finalPurity,
-      final_deduction_percent: deduction,
-      final_price_toman: finalPrice,
+      purity_percent: finalPurity,
+      deduction_percent: deduction,
+      final_price: finalPrice,
       expert_id: u.user?.id,
       status: "price_offered",
     }).eq("id", s.id);
@@ -77,15 +77,15 @@ function ShipmentCard({ s, pricing, onDone }: any) {
     setLoading(true);
     const finalPriceReal = pricing ? calcEstimatedPrice({
       weightKg: Number(actualWeight),
-      purityPercent: Number(s.final_purity_percent || finalPurity),
+      purityPercent: Number(s.purity_percent || finalPurity),
       copperUsd: Number(pricing.copper_price_usd),
       usdRate: Number(pricing.usd_rate),
       feePercent: Number(pricing.fee_percent ?? 0),
-      deductionPercent: Number(s.final_deduction_percent || deduction),
+      deductionPercent: Number(s.deduction_percent || deduction),
     }) : 0;
     const { error } = await supabase.from("shipments").update({
-      actual_weight_kg: actualWeight,
-      final_price_toman: finalPriceReal,
+      actual_estimated_weight: actualWeight,
+      final_price: finalPriceReal,
       status: "weighed",
     }).eq("id", s.id);
     setLoading(false);
@@ -101,18 +101,18 @@ function ShipmentCard({ s, pricing, onDone }: any) {
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-bold">{SCRAP_TYPE_LABELS[s.scrap_type]}</span>
             <span className="text-muted-foreground">•</span>
-            <span>{formatNumber(Number(s.weight_kg))} کیلو تخمینی</span>
+            <span>{formatNumber(Number(s.estimated_weight))} کیلو تخمینی</span>
             <span className="text-muted-foreground">•</span>
-            <span>خلوص اعلامی {formatNumber(s.estimated_purity_percent)}٪</span>
+            <span>خلوص اعلامی {formatNumber(s.purity_percent)}٪</span>
           </div>
           <div className="text-xs text-muted-foreground mt-1">{formatDate(s.created_at)}</div>
-          {s.pickup_address && <div className="text-sm mt-2">{s.pickup_address}</div>}
+          {s.address && <div className="text-sm mt-2">{s.address}</div>}
           {s.notes && <div className="text-xs mt-1 text-muted-foreground">یادداشت: {s.notes}</div>}
         </div>
         <div className="text-left">
           <span className={"text-xs px-2 py-1 rounded-full inline-block mb-2 " + (STATUS_TONE[s.status] || "bg-secondary")}>{STATUS_LABELS[s.status]}</span>
-          <div className="text-sm text-muted-foreground">تخمین: {formatToman(s.estimated_price_toman)}</div>
-          {s.final_price_toman && <div className="text-base font-bold text-primary">نهایی: {formatToman(s.final_price_toman)}</div>}
+          <div className="text-sm text-muted-foreground">تخمین: {formatToman(s.estimated_price)}</div>
+          {s.final_price && <div className="text-base font-bold text-primary">نهایی: {formatToman(s.final_price)}</div>}
         </div>
       </div>
 

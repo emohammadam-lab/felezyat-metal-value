@@ -53,7 +53,7 @@ function NewShipment() {
       copperUsd: Number(pricing.copper_price_usd),
       usdRate: Number(pricing.usd_rate),
       feePercent: Number(pricing.fee_percent ?? 0),
-      deductionPercent: Number(pricing.default_deduction_percent ?? 0),
+      deductionPercent: Number(pricing.deduction_percent ?? 0),
     });
   }, [pricing, weight, purity]);
 
@@ -72,12 +72,12 @@ function NewShipment() {
       const { error } = await supabase.from("shipments").insert({
         seller_id: user.id,
         scrap_type: scrapType as any,
-        weight_kg: Number(weight),
-        estimated_purity_percent: purity,
-        pickup_address: address,
+        estimated_weight: Number(weight),
+        purity_percent: purity,
+        address: address,
         notes,
         photos: urls,
-        estimated_price_toman: estimate,
+        estimated_price: estimate,
         status: "awaiting_expert",
       });
       if (error) throw error;

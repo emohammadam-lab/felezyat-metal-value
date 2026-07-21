@@ -44,9 +44,9 @@ function Dashboard() {
         const [all, pending, settled] = await Promise.all([
           supabase.from("shipments").select("id", { count: "exact", head: true }),
           supabase.from("shipments").select("id", { count: "exact", head: true }).in("status", ["registered", "awaiting_expert"]),
-          supabase.from("shipments").select("final_price_toman").eq("status", "settled"),
+          supabase.from("shipments").select("final_price").eq("status", "settled"),
         ]);
-        const total = (settled.data ?? []).reduce((a: number, r: any) => a + Number(r.final_price_toman ?? 0), 0);
+        const total = (settled.data ?? []).reduce((a: number, r: any) => a + Number(r.final_price ?? 0), 0);
         setStats({ total: all.count ?? 0, pending: pending.count ?? 0, volume: total });
         const { data } = await supabase.from("shipments").select("*").order("created_at", { ascending: false }).limit(6);
         setRecent(data ?? []);
@@ -101,12 +101,12 @@ function Dashboard() {
             {recent.map((s: any) => (
               <div key={s.id} className="flex items-center justify-between p-3 rounded-lg border border-border/60 hover:bg-secondary/40">
                 <div>
-                  <div className="font-medium">{SCRAP_TYPE_LABELS[s.scrap_type] || s.scrap_type} — {formatNumber(Number(s.weight_kg))} کیلو</div>
+                  <div className="font-medium">{SCRAP_TYPE_LABELS[s.scrap_type] || s.scrap_type} — {formatNumber(Number(s.estimated_weight))} کیلو</div>
                   <div className="text-xs text-muted-foreground mt-0.5">{formatDate(s.created_at)}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-sm font-bold text-primary">
-                    {s.final_price_toman ? formatToman(s.final_price_toman) : formatToman(s.estimated_price_toman ?? 0)}
+                    {s.final_price ? formatToman(s.final_price) : formatToman(s.estimated_price ?? 0)}
                   </div>
                   <span className={"text-xs px-2 py-1 rounded-full " + (STATUS_TONE[s.status] || "bg-secondary")}>{STATUS_LABELS[s.status] || s.status}</span>
                 </div>

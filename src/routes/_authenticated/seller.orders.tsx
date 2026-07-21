@@ -50,17 +50,17 @@ function Orders() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold">{SCRAP_TYPE_LABELS[s.scrap_type]}</span>
                     <span className="text-muted-foreground">•</span>
-                    <span>{formatNumber(Number(s.weight_kg))} کیلوگرم</span>
+                    <span>{formatNumber(Number(s.estimated_weight))} کیلوگرم</span>
                     <span className="text-muted-foreground">•</span>
-                    <span>{formatNumber(s.estimated_purity_percent)}٪ خلوص</span>
+                    <span>{formatNumber(s.purity_percent)}٪ خلوص</span>
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">{formatDate(s.created_at)}</div>
-                  {s.pickup_address && <div className="text-sm mt-2 text-muted-foreground">{s.pickup_address}</div>}
+                  {s.address && <div className="text-sm mt-2 text-muted-foreground">{s.address}</div>}
                 </div>
                 <div className="text-left">
                   <span className={"text-xs px-2 py-1 rounded-full inline-block mb-2 " + (STATUS_TONE[s.status] || "bg-secondary")}>{STATUS_LABELS[s.status] || s.status}</span>
-                  <div className="text-lg font-bold text-primary">{formatToman(s.final_price_toman ?? s.estimated_price_toman)}</div>
-                  {s.final_price_toman && !s.actual_weight_kg && (
+                  <div className="text-lg font-bold text-primary">{formatToman(s.final_price ?? s.estimated_price)}</div>
+                  {s.final_price && !s.actual_estimated_weight && (
                     <div className="text-xs text-success mt-1">قیمت نهایی اعلام شد</div>
                   )}
                 </div>

@@ -26,7 +26,7 @@ function PricingAdmin() {
       copper_price_usd: p.copper_price_usd,
       usd_rate: p.usd_rate,
       fee_percent: p.fee_percent,
-      default_deduction_percent: p.default_deduction_percent,
+      deduction_percent: p.deduction_percent,
     }).eq("id", 1);
     setSaving(false);
     if (error) return toast.error(error.message);
@@ -42,7 +42,7 @@ function PricingAdmin() {
         <Field label="قیمت جهانی مس (دلار به ازای کیلوگرم)" value={p.copper_price_usd} onChange={(v) => setP({ ...p, copper_price_usd: v })} />
         <Field label="نرخ دلار (ریال)" value={p.usd_rate} onChange={(v) => setP({ ...p, usd_rate: v })} />
         <Field label="کارمزد پلتفرم (٪)" value={p.fee_percent} onChange={(v) => setP({ ...p, fee_percent: v })} />
-        <Field label="کسورات پیش‌فرض (٪)" value={p.default_deduction_percent} onChange={(v) => setP({ ...p, default_deduction_percent: v })} />
+        <Field label="کسورات پیش‌فرض (٪)" value={p.deduction_percent} onChange={(v) => setP({ ...p, deduction_percent: v })} />
         <Button onClick={save} disabled={saving} className="w-full">{saving ? "..." : "ذخیره تغییرات"}</Button>
       </Card>
     </div>

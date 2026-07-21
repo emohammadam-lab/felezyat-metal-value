@@ -20,8 +20,8 @@ function AdminOrders() {
   useEffect(() => { load(); }, []);
 
   async function settle(s: any) {
-    if (!s.final_price_toman) return toast.error("قیمت نهایی مشخص نیست.");
-    const amount = Number(s.final_price_toman);
+    if (!s.final_price) return toast.error("قیمت نهایی مشخص نیست.");
+    const amount = Number(s.final_price);
     const { error: uErr } = await supabase.from("shipments").update({ status: "settled" }).eq("id", s.id);
     if (uErr) return toast.error(uErr.message);
     const { data: w } = await supabase.from("wallets").select("balance").eq("user_id", s.seller_id).maybeSingle();
@@ -49,14 +49,14 @@ function AdminOrders() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-bold">{SCRAP_TYPE_LABELS[s.scrap_type]}</span>
                   <span className="text-muted-foreground">•</span>
-                  <span>{formatNumber(Number(s.actual_weight_kg ?? s.weight_kg))} کیلو</span>
+                  <span>{formatNumber(Number(s.actual_estimated_weight ?? s.estimated_weight))} کیلو</span>
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">{formatDate(s.created_at)}</div>
-                {s.pickup_address && <div className="text-sm mt-2">{s.pickup_address}</div>}
+                {s.address && <div className="text-sm mt-2">{s.address}</div>}
               </div>
               <div className="text-left">
                 <span className={"text-xs px-2 py-1 rounded-full inline-block mb-2 " + (STATUS_TONE[s.status] || "bg-secondary")}>{STATUS_LABELS[s.status]}</span>
-                <div className="text-lg font-bold text-primary">{formatToman(s.final_price_toman ?? s.estimated_price_toman)}</div>
+                <div className="text-lg font-bold text-primary">{formatToman(s.final_price ?? s.estimated_price)}</div>
                 {s.status === "weighed" && (
                   <Button size="sm" className="mt-2" onClick={() => settle(s)}>تسویه و واریز</Button>
                 )}
