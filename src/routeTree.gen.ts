@@ -9,38 +9,204 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedSellerWalletRouteImport } from './routes/_authenticated/seller.wallet'
+import { Route as AuthenticatedSellerOrdersRouteImport } from './routes/_authenticated/seller.orders'
+import { Route as AuthenticatedSellerNewRouteImport } from './routes/_authenticated/seller.new'
+import { Route as AuthenticatedExpertQueueRouteImport } from './routes/_authenticated/expert.queue'
+import { Route as AuthenticatedAdminWalletRouteImport } from './routes/_authenticated/admin.wallet'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminRoadmapRouteImport } from './routes/_authenticated/admin.roadmap'
+import { Route as AuthenticatedAdminPricingRouteImport } from './routes/_authenticated/admin.pricing'
+import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSellerWalletRoute =
+  AuthenticatedSellerWalletRouteImport.update({
+    id: '/seller/wallet',
+    path: '/seller/wallet',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSellerOrdersRoute =
+  AuthenticatedSellerOrdersRouteImport.update({
+    id: '/seller/orders',
+    path: '/seller/orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSellerNewRoute = AuthenticatedSellerNewRouteImport.update({
+  id: '/seller/new',
+  path: '/seller/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedExpertQueueRoute =
+  AuthenticatedExpertQueueRouteImport.update({
+    id: '/expert/queue',
+    path: '/expert/queue',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminWalletRoute =
+  AuthenticatedAdminWalletRouteImport.update({
+    id: '/admin/wallet',
+    path: '/admin/wallet',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRoadmapRoute =
+  AuthenticatedAdminRoadmapRouteImport.update({
+    id: '/admin/roadmap',
+    path: '/admin/roadmap',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminPricingRoute =
+  AuthenticatedAdminPricingRouteImport.update({
+    id: '/admin/pricing',
+    path: '/admin/pricing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminOrdersRoute =
+  AuthenticatedAdminOrdersRouteImport.update({
+    id: '/admin/orders',
+    path: '/admin/orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/pricing': typeof AuthenticatedAdminPricingRoute
+  '/admin/roadmap': typeof AuthenticatedAdminRoadmapRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/wallet': typeof AuthenticatedAdminWalletRoute
+  '/expert/queue': typeof AuthenticatedExpertQueueRoute
+  '/seller/new': typeof AuthenticatedSellerNewRoute
+  '/seller/orders': typeof AuthenticatedSellerOrdersRoute
+  '/seller/wallet': typeof AuthenticatedSellerWalletRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/pricing': typeof AuthenticatedAdminPricingRoute
+  '/admin/roadmap': typeof AuthenticatedAdminRoadmapRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/wallet': typeof AuthenticatedAdminWalletRoute
+  '/expert/queue': typeof AuthenticatedExpertQueueRoute
+  '/seller/new': typeof AuthenticatedSellerNewRoute
+  '/seller/orders': typeof AuthenticatedSellerOrdersRoute
+  '/seller/wallet': typeof AuthenticatedSellerWalletRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/_authenticated/admin/pricing': typeof AuthenticatedAdminPricingRoute
+  '/_authenticated/admin/roadmap': typeof AuthenticatedAdminRoadmapRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/admin/wallet': typeof AuthenticatedAdminWalletRoute
+  '/_authenticated/expert/queue': typeof AuthenticatedExpertQueueRoute
+  '/_authenticated/seller/new': typeof AuthenticatedSellerNewRoute
+  '/_authenticated/seller/orders': typeof AuthenticatedSellerOrdersRoute
+  '/_authenticated/seller/wallet': typeof AuthenticatedSellerWalletRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/admin/orders'
+    | '/admin/pricing'
+    | '/admin/roadmap'
+    | '/admin/users'
+    | '/admin/wallet'
+    | '/expert/queue'
+    | '/seller/new'
+    | '/seller/orders'
+    | '/seller/wallet'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/admin/orders'
+    | '/admin/pricing'
+    | '/admin/roadmap'
+    | '/admin/users'
+    | '/admin/wallet'
+    | '/expert/queue'
+    | '/seller/new'
+    | '/seller/orders'
+    | '/seller/wallet'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/admin/orders'
+    | '/_authenticated/admin/pricing'
+    | '/_authenticated/admin/roadmap'
+    | '/_authenticated/admin/users'
+    | '/_authenticated/admin/wallet'
+    | '/_authenticated/expert/queue'
+    | '/_authenticated/seller/new'
+    | '/_authenticated/seller/orders'
+    | '/_authenticated/seller/wallet'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +214,113 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/seller/wallet': {
+      id: '/_authenticated/seller/wallet'
+      path: '/seller/wallet'
+      fullPath: '/seller/wallet'
+      preLoaderRoute: typeof AuthenticatedSellerWalletRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/seller/orders': {
+      id: '/_authenticated/seller/orders'
+      path: '/seller/orders'
+      fullPath: '/seller/orders'
+      preLoaderRoute: typeof AuthenticatedSellerOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/seller/new': {
+      id: '/_authenticated/seller/new'
+      path: '/seller/new'
+      fullPath: '/seller/new'
+      preLoaderRoute: typeof AuthenticatedSellerNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/expert/queue': {
+      id: '/_authenticated/expert/queue'
+      path: '/expert/queue'
+      fullPath: '/expert/queue'
+      preLoaderRoute: typeof AuthenticatedExpertQueueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/wallet': {
+      id: '/_authenticated/admin/wallet'
+      path: '/admin/wallet'
+      fullPath: '/admin/wallet'
+      preLoaderRoute: typeof AuthenticatedAdminWalletRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/roadmap': {
+      id: '/_authenticated/admin/roadmap'
+      path: '/admin/roadmap'
+      fullPath: '/admin/roadmap'
+      preLoaderRoute: typeof AuthenticatedAdminRoadmapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/pricing': {
+      id: '/_authenticated/admin/pricing'
+      path: '/admin/pricing'
+      fullPath: '/admin/pricing'
+      preLoaderRoute: typeof AuthenticatedAdminPricingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/orders': {
+      id: '/_authenticated/admin/orders'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
+  AuthenticatedAdminPricingRoute: typeof AuthenticatedAdminPricingRoute
+  AuthenticatedAdminRoadmapRoute: typeof AuthenticatedAdminRoadmapRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminWalletRoute: typeof AuthenticatedAdminWalletRoute
+  AuthenticatedExpertQueueRoute: typeof AuthenticatedExpertQueueRoute
+  AuthenticatedSellerNewRoute: typeof AuthenticatedSellerNewRoute
+  AuthenticatedSellerOrdersRoute: typeof AuthenticatedSellerOrdersRoute
+  AuthenticatedSellerWalletRoute: typeof AuthenticatedSellerWalletRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
+  AuthenticatedAdminPricingRoute: AuthenticatedAdminPricingRoute,
+  AuthenticatedAdminRoadmapRoute: AuthenticatedAdminRoadmapRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAdminWalletRoute: AuthenticatedAdminWalletRoute,
+  AuthenticatedExpertQueueRoute: AuthenticatedExpertQueueRoute,
+  AuthenticatedSellerNewRoute: AuthenticatedSellerNewRoute,
+  AuthenticatedSellerOrdersRoute: AuthenticatedSellerOrdersRoute,
+  AuthenticatedSellerWalletRoute: AuthenticatedSellerWalletRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
