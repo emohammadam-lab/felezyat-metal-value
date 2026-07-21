@@ -75,7 +75,7 @@ function NewShipment() {
         estimated_weight: Number(weight),
         purity_percent: purity,
         address: address,
-        notes,
+        description: notes,
         photos: urls,
         estimated_price: estimate,
         status: "awaiting_expert",

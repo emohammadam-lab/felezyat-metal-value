@@ -45,7 +45,7 @@ function Queue() {
 function ShipmentCard({ s, pricing, onDone }: any) {
   const [finalPurity, setFinalPurity] = useState(s.purity_percent || 70);
   const [deduction, setDeduction] = useState(Number(pricing?.deduction_percent ?? 8));
-  const [actualWeight, setActualWeight] = useState(s.actual_estimated_weight || s.estimated_weight);
+  const [actualWeight, setActualWeight] = useState(s.final_weight || s.estimated_weight);
   const [loading, setLoading] = useState(false);
 
   const finalPrice = pricing ? calcEstimatedPrice({
@@ -83,7 +83,7 @@ function ShipmentCard({ s, pricing, onDone }: any) {
       deductionPercent: Number(deduction),
     }) : 0;
     const { error } = await supabase.from("shipments").update({
-      actual_estimated_weight: actualWeight,
+      final_weight: actualWeight,
       final_price: finalPriceReal,
       status: "weighed",
     }).eq("id", s.id);
