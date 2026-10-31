@@ -49,8 +49,49 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Default theme: dark charcoal (ذغالی) with copper accents */
 :root {
   --radius: 0.75rem;
+  --background: oklch(0.185 0.01 60);
+  --foreground: oklch(0.94 0.012 75);
+  --card: oklch(0.225 0.012 60);
+  --card-foreground: oklch(0.94 0.012 75);
+  --popover: oklch(0.225 0.012 60);
+  --popover-foreground: oklch(0.94 0.012 75);
+  --primary: oklch(0.7 0.15 55);
+  --primary-foreground: oklch(0.16 0.02 55);
+  --primary-glow: oklch(0.78 0.14 62);
+  --secondary: oklch(0.27 0.014 60);
+  --secondary-foreground: oklch(0.9 0.015 70);
+  --muted: oklch(0.26 0.012 60);
+  --muted-foreground: oklch(0.68 0.02 65);
+  --accent: oklch(0.72 0.1 195);
+  --accent-foreground: oklch(0.16 0.02 200);
+  --success: oklch(0.7 0.15 165);
+  --success-foreground: oklch(0.15 0.03 165);
+  --warning: oklch(0.8 0.15 80);
+  --warning-foreground: oklch(0.2 0.04 75);
+  --destructive: oklch(0.66 0.2 27);
+  --destructive-foreground: oklch(0.97 0.01 80);
+  --border: oklch(0.32 0.015 60);
+  --input: oklch(0.32 0.015 60);
+  --ring: oklch(0.7 0.15 55);
+  --gradient-copper: linear-gradient(135deg, oklch(0.7 0.15 55), oklch(0.8 0.13 65));
+  --gradient-warm: linear-gradient(180deg, oklch(0.185 0.01 60), oklch(0.15 0.01 55));
+  --shadow-copper: 0 10px 34px -10px oklch(0.7 0.15 55 / 0.35);
+  --shadow-soft: 0 2px 14px -4px oklch(0 0 0 / 0.5);
+  --sidebar: oklch(0.15 0.012 55);
+  --sidebar-foreground: oklch(0.92 0.015 70);
+  --sidebar-primary: oklch(0.7 0.15 55);
+  --sidebar-primary-foreground: oklch(0.16 0.02 55);
+  --sidebar-accent: oklch(0.24 0.015 60);
+  --sidebar-accent-foreground: oklch(0.94 0.012 75);
+  --sidebar-border: oklch(0.27 0.015 60);
+  --sidebar-ring: oklch(0.7 0.15 55);
+}
+
+/* Light theme: warm paper with copper accents */
+.light {
   --background: oklch(0.985 0.012 75);
   --foreground: oklch(0.22 0.03 45);
   --card: oklch(1 0 0);
@@ -64,7 +105,7 @@
   --secondary-foreground: oklch(0.28 0.04 45);
   --muted: oklch(0.95 0.015 70);
   --muted-foreground: oklch(0.5 0.03 50);
-  --accent: oklch(0.62 0.10 195);
+  --accent: oklch(0.62 0.1 195);
   --accent-foreground: oklch(0.99 0.005 80);
   --success: oklch(0.62 0.14 165);
   --success-foreground: oklch(0.99 0.005 80);
