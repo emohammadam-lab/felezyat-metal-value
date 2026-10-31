@@ -1,26 +1,57 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowLeft, Coins, Gauge, ShieldCheck, Truck, Users, Zap } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, BadgeCheck, Coins, Headset, Home, Scale, Truck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { supabase } from "@/integrations/supabase/client";
-import { formatToman, formatNumber } from "@/lib/format";
+import { calcEstimatedPrice, formatToman, formatNumber, SCRAP_TYPE_LABELS } from "@/lib/format";
 
 export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+const PURITY_DEFAULT: Record<string, number> = {
+  coated_cable: 55,
+  burnt: 88,
+  shavings: 92,
+  body: 96,
+  other: 70,
+};
+
 function Landing() {
-  const [pricing, setPricing] = useState<{ copper_price_usd: number; usd_rate: number } | null>(null);
+  const [pricing, setPricing] = useState<any>(null);
+  const [scrapType, setScrapType] = useState("coated_cable");
+  const [weight, setWeight] = useState("");
+  const [purity, setPurity] = useState(PURITY_DEFAULT.coated_cable);
 
   useEffect(() => {
     supabase
       .from("pricing_config")
-      .select("copper_price_usd, usd_rate")
+      .select("*")
       .eq("id", 1)
       .maybeSingle()
-      .then(({ data }) => data && setPricing(data as any));
+      .then(({ data }) => data && setPricing(data));
   }, []);
+
+  useEffect(() => {
+    setPurity(PURITY_DEFAULT[scrapType] ?? 70);
+  }, [scrapType]);
+
+  const estimate = useMemo(() => {
+    if (!pricing || !weight) return 0;
+    return calcEstimatedPrice({
+      weightKg: Number(weight),
+      purityPercent: purity,
+      copperUsd: Number(pricing.copper_price_usd),
+      usdRate: Number(pricing.usd_rate),
+      feePercent: Number(pricing.fee_percent ?? 0),
+      deductionPercent: Number(pricing.deduction_percent ?? 0),
+    });
+  }, [pricing, weight, purity]);
 
   const perKgAt100 = pricing ? Math.round(Number(pricing.copper_price_usd) * Number(pricing.usd_rate)) : null;
 
@@ -29,37 +60,44 @@ function Landing() {
       <header className="border-b border-border/60 backdrop-blur bg-background/70 sticky top-0 z-30">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>م</div>
+            <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>ف</div>
             <div className="font-bold text-lg">فلزیافت</div>
           </div>
           <nav className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/auth"><Button variant="ghost">ورود</Button></Link>
-            <Link to="/auth"><Button>ثبت‌نام فروشنده</Button></Link>
+            <Link to="/auth"><Button>شروع فروش</Button></Link>
           </nav>
         </div>
       </header>
 
-      <section className="mx-auto max-w-6xl px-4 pt-16 pb-20 grid md:grid-cols-2 gap-10 items-center">
+      {/* Hero */}
+      <section className="mx-auto max-w-6xl px-4 pt-14 pb-16 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs text-primary mb-6">
             <Zap className="w-3.5 h-3.5" />
             فاز پایلوت — تهران
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-foreground">
-            خرید نقدی ضایعات مس <br />
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-copper)" }}>با قیمت زنده و تسویه لحظه‌ای</span>
+            ضایعات مس خانه‌ات را <br />
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-copper)" }}>همین امروز نقد کن</span>
           </h1>
           <p className="mt-5 text-lg text-muted-foreground leading-8">
-            مسیار پلتفرم امن و شفاف خرید ضایعات مس از پیمانکاران مخابرات است. قیمت لحظه‌ای، کارشناسی حرفه‌ای، حمل و توزین در باسکول مرجع و واریز آنی به کیف پول شما.
+            فلزیافت ضایعات مس خانه، مغازه و کارگاه شما را با قیمت زنده می‌خرد. قیمت را همین‌جا ببین، ما رایگان می‌آییم درب منزل، جلوی چشمت توزین می‌کنیم و پول را همان لحظه می‌گیری.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/auth">
+            <a href="#calc">
               <Button size="lg" className="gap-2">
-                شروع فروش
+                قیمت فوری بگیر
                 <ArrowLeft className="w-4 h-4" />
               </Button>
-            </Link>
-            <a href="#how"><Button size="lg" variant="outline">جریان کار</Button></a>
+            </a>
+            <Link to="/auth"><Button size="lg" variant="outline">ثبت‌نام رایگان</Button></Link>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5"><BadgeCheck className="w-4 h-4 text-success" /> بدون هزینه کارشناسی</span>
+            <span className="flex items-center gap-1.5"><Truck className="w-4 h-4 text-success" /> حمل رایگان</span>
+            <span className="flex items-center gap-1.5"><Coins className="w-4 h-4 text-success" /> تسویه آنی</span>
           </div>
         </div>
 
@@ -78,11 +116,71 @@ function Landing() {
             <Stat label="نرخ دلار" value={pricing ? formatNumber(Number(pricing.usd_rate)) + " ﷼" : "..."} />
           </div>
           <p className="mt-4 text-xs text-muted-foreground leading-6">
-            قیمت نهایی پس از کارشناسی، اعمال درصد خلوص، کسورات پالایش و کارمزد پلتفرم محاسبه می‌شود.
+            قیمت نهایی پس از کارشناسی، اعمال درصد خلوص، کسورات پالایش و کارمزد محاسبه می‌شود.
           </p>
         </Card>
       </section>
 
+      {/* Instant price calculator */}
+      <section id="calc" className="mx-auto max-w-6xl px-4 pb-16">
+        <Card className="p-6 md:p-8 border-primary/20" style={{ boxShadow: "var(--shadow-copper)" }}>
+          <h2 className="text-2xl font-extrabold mb-1">قیمت فوری، بدون ثبت‌نام</h2>
+          <p className="text-sm text-muted-foreground mb-6">نوع ضایعات و وزن تقریبی را بگو تا حدود قیمت را همین‌جا ببینی.</p>
+          <div className="grid md:grid-cols-4 gap-4 items-end">
+            <div>
+              <Label>نوع ضایعات</Label>
+              <Select value={scrapType} onValueChange={setScrapType}>
+                <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {Object.entries(SCRAP_TYPE_LABELS).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>وزن تقریبی (کیلوگرم)</Label>
+              <Input type="number" min={1} step="0.1" value={weight} onChange={(e) => setWeight(e.target.value)} className="mt-1.5" dir="ltr" placeholder="مثلا ۱۰" />
+            </div>
+            <div>
+              <Label>درصد خلوص تخمینی: {purity}٪</Label>
+              <input type="range" min={30} max={99} value={purity} onChange={(e) => setPurity(Number(e.target.value))} className="w-full mt-3" />
+            </div>
+            <div className="rounded-xl bg-secondary/60 p-4 text-center">
+              <div className="text-xs text-muted-foreground">تخمین فلزیافت</div>
+              <div className="text-2xl font-extrabold text-primary mt-1">{weight ? formatToman(estimate) : "—"}</div>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link to="/auth">
+              <Button className="gap-2">
+                ثبت سفارش فروش
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+            </Link>
+            <p className="text-xs text-muted-foreground">قیمت دقیق بعد از کارشناسی رایگان اعلام می‌شود؛ هیچ تعهدی برای فروش نداری.</p>
+          </div>
+        </Card>
+      </section>
+
+      {/* 3 simple steps */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-10">سه قدم تا پول نقد</h2>
+        <ol className="grid md:grid-cols-3 gap-4">
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="rounded-xl border border-border/60 bg-card p-6">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <s.icon className="w-5 h-5" />
+              </div>
+              <div className="text-primary font-bold text-sm mb-1">قدم {formatNumber(i + 1)}</div>
+              <h3 className="font-bold mb-2">{s.title}</h3>
+              <p className="text-sm text-muted-foreground leading-6">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* Features */}
       <section className="mx-auto max-w-6xl px-4 pb-16 grid md:grid-cols-3 gap-4">
         {FEATURES.map((f) => (
           <Card key={f.title} className="p-6 border-border/60">
@@ -95,16 +193,17 @@ function Landing() {
         ))}
       </section>
 
-      <section id="how" className="mx-auto max-w-6xl px-4 pb-24">
-        <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-10">شش گام تا تسویه</h2>
-        <ol className="grid md:grid-cols-6 gap-3">
-          {STEPS.map((s, i) => (
-            <li key={s} className="rounded-xl border border-border/60 bg-card p-4">
-              <div className="text-primary font-bold mb-2">{formatNumber(i + 1)}</div>
-              <div className="text-sm text-foreground leading-6">{s}</div>
-            </li>
+      {/* FAQ */}
+      <section className="mx-auto max-w-3xl px-4 pb-24">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-10">سؤال‌های پرتکرار</h2>
+        <div className="space-y-3">
+          {FAQ.map((q) => (
+            <Card key={q.q} className="p-5">
+              <h3 className="font-bold mb-1.5">{q.q}</h3>
+              <p className="text-sm text-muted-foreground leading-6">{q.a}</p>
+            </Card>
           ))}
-        </ol>
+        </div>
       </section>
 
       <footer className="border-t border-border/60 py-8 text-center text-sm text-muted-foreground">
@@ -123,20 +222,24 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-const FEATURES = [
-  { icon: Gauge, title: "قیمت‌گذاری زنده", desc: "فرمول شفاف بر پایه نرخ جهانی مس، دلار روز و درصد خلوص محموله." },
-  { icon: ShieldCheck, title: "کارشناسی حرفه‌ای", desc: "بررسی دیجیتال تصاویر و بازدید حضوری کارشناس پیش از قفل قیمت." },
-  { icon: Truck, title: "حمل و توزین امن", desc: "اعزام وسیله نقلیه، توزین در باسکول مرجع و ثبت زنجیره حفاظت بار." },
-  { icon: Coins, title: "تسویه آنی", desc: "پس از توزین، مبلغ به‌صورت لحظه‌ای به کیف پول دیجیتال شما واریز می‌شود." },
-  { icon: Users, title: "سه پنل تخصصی", desc: "پنل‌های اختصاصی فروشنده، کارشناس و مدیر با دسترسی‌های امن." },
-  { icon: Zap, title: "نقشه راه هوشمند", desc: "توسعه آینده: مزایده آنلاین، خلوص‌سنجی با هوش مصنوعی، شبکه ذوب امین." },
+const STEPS = [
+  { icon: Zap, title: "قیمت فوری بگیر", desc: "نوع و وزن ضایعات را وارد کن و حدود قیمت را همان لحظه ببین؛ بدون ثبت‌نام و بدون تماس." },
+  { icon: Truck, title: "ما می‌آییم سراغت", desc: "کارشناس فلزیافت رایگان به آدرس تو می‌آید؛ بار را بررسی و جلوی چشمت در باسکول توزین می‌کند." },
+  { icon: Coins, title: "پولت را آنی بگیر", desc: "بلافاصله بعد از توزین، مبلغ به کیف پول یا حساب بانکی‌ات واریز می‌شود. تمام!" },
 ];
 
-const STEPS = [
-  "ثبت‌نام و احراز هویت",
-  "ثبت مشخصات محموله و عکس",
-  "دریافت قیمت تخمینی زنده",
-  "کارشناسی و اعلام قیمت نهایی",
-  "حمل و توزین در باسکول مرجع",
-  "تسویه آنی به کیف پول",
+const FEATURES = [
+  { icon: Home, title: "برای همه، نه فقط پیمانکاران", desc: "چند کیلو سیم قدیمی خانه یا ضایعات کارگاه؛ فرقی ندارد، ما از همه خریداریم." },
+  { icon: Scale, title: "توزین شفاف", desc: "توزین در باسکول مرجع و جلوی چشم خودت انجام می‌شود؛ عدد ترازو را خودت می‌بینی." },
+  { icon: Truck, title: "حمل رایگان", desc: "نیازی نیست بار را جابه‌جا کنی؛ وسیله نقلیه ما برای بارگیری به آدرس تو می‌آید." },
+  { icon: Coins, title: "تسویه لحظه‌ای", desc: "هیچ چک و تماشایی در کار نیست؛ پول همان لحظه به حسابت می‌نشیند." },
+  { icon: BadgeCheck, title: "کارشناسی رایگان", desc: "بررسی و قیمت‌گذاری نهایی رایگان است و اگر راضی نبودی، هیچ هزینه‌ای نمی‌دهی." },
+  { icon: Headset, title: "پشتیبانی واقعی", desc: "از ثبت سفارش تا واریز پول، یک انسان واقعی پاسخگوی توست." },
+];
+
+const FAQ = [
+  { q: "حداقل مقدار برای فروش چقدر است؟", a: "در فاز پایلوت از چند کیلوگرم به بالا را می‌پذیریم؛ قیمت فوری را بگیر و سفارش را ثبت کن تا هماهنگ کنیم." },
+  { q: "حمل و بارگیری هزینه دارد؟", a: "نه. اعزام وسیله نقلیه و بارگیری در فاز پایلوت کاملا رایگان است." },
+  { q: "قیمت نهایی چطور تعیین می‌شود؟", a: "بر پایه نرخ زنده مس، درصد خلوص محموله و وزن دقیق باسکول؛ همه اعداد شفاف به تو نشان داده می‌شود." },
+  { q: "پول را کی و کجا می‌گیرم؟", a: "بلافاصله پس از توزین، مبلغ به کیف پول فلزیافت می‌آید و می‌توانی همان لحظه به حساب بانکی‌ات برداشت کنی." },
 ];
