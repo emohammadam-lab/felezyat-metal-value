@@ -50,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="p-5 border-b border-sidebar-border flex items-center gap-2">
           <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>م</div>
           <div>
-            <div className="font-bold">مسیار</div>
+            <div className="font-bold leading-tight">میسه فلزیافت</div>
             <div className="text-xs opacity-70">پنل {roleLabel}</div>
           </div>
         </div>

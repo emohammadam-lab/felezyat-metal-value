@@ -59,7 +59,7 @@ function AuthPage() {
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 justify-center mb-6">
           <div className="h-10 w-10 rounded-xl flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>م</div>
-          <div className="font-bold text-xl">مسیار</div>
+          <div className="font-bold text-xl">میسه فلزیافت</div>
         </Link>
         <Card className="p-6" style={{ boxShadow: "var(--shadow-soft)" }}>
           <Tabs defaultValue="signin">
