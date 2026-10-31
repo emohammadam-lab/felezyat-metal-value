@@ -30,7 +30,7 @@ function Landing() {
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>م</div>
-            <div className="font-bold text-lg">مسیار</div>
+            <div className="font-bold text-lg">میسه فلزیافت</div>
           </div>
           <nav className="flex items-center gap-2">
             <Link to="/auth"><Button variant="ghost">ورود</Button></Link>
@@ -108,7 +108,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border/60 py-8 text-center text-sm text-muted-foreground">
-        © مسیار — پلتفرم خرید و مدیریت ضایعات مس
+        © میسه فلزیافت — خرید نقدی ضایعات مس · felezyaft.ir
       </footer>
     </div>
   );
