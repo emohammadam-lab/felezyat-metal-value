@@ -78,10 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "میسه فلزیافت — ضایعات مس خود را نقد بفروشید" },
-      { name: "description", content: "میسه فلزیافت (felezyaft.ir) ضایعات مس شما را با قیمت زنده می‌خرد: قیمت فوری آنلاین، کارشناسی و حمل رایگان، تسویه لحظه‌ای." },
+      { title: "فلزیافت — ضایعات مس خود را نقد بفروشید" },
+      { name: "description", content: "فلزیافت (felezyaft.ir) ضایعات مس شما را با قیمت زنده می‌خرد: قیمت فوری آنلاین، کارشناسی و حمل رایگان، تسویه لحظه‌ای." },
       { name: "author", content: "Felezyaft" },
-      { property: "og:title", content: "میسه فلزیافت — خرید نقدی ضایعات مس از همه" },
+      { property: "og:title", content: "فلزیافت — خرید نقدی ضایعات مس از همه" },
       { property: "og:description", content: "قیمت زنده، کارشناسی و حمل رایگان و تسویه آنی — برای خانه، مغازه و کارگاه." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
