@@ -1,44 +1,75 @@
-import { useEffect, useState } from "react";
-import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState, useCallback, createContext, useContext } from "react";
+import { api, setStoredToken, getStoredToken, type UserData, type UserProfile } from "./api";
 
 export type AppRole = "seller" | "expert" | "admin";
 
+interface AuthContextType {
+  user: UserData | null;
+  profile: UserProfile | null;
+  roles: AppRole[];
+  isAdmin: boolean;
+  isExpert: boolean;
+  primaryRole: AppRole;
+  activeRole: AppRole;
+  setActiveRole: (role: AppRole) => void;
+  loading: boolean;
+  refreshUser: () => Promise<void>;
+  signOut: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
 export function useAuth() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [roles, setRoles] = useState<AppRole[]>([]);
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeRoleOverride, setActiveRoleOverride] = useState<AppRole | null>(null);
 
-  useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-      if (s?.user) {
-        setTimeout(() => loadRoles(s.user.id), 0);
-      } else {
-        setRoles([]);
-      }
-    });
-
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      if (data.session?.user) loadRoles(data.session.user.id).finally(() => setLoading(false));
-      else setLoading(false);
-    });
-
-    async function loadRoles(uid: string) {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid);
-      setRoles((data ?? []).map((r) => r.role as AppRole));
+  const refreshUser = useCallback(async () => {
+    const token = getStoredToken();
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
     }
-
-    return () => sub.subscription.unsubscribe();
+    try {
+      const data = await api.auth.getMe();
+      setUser(data);
+    } catch (err) {
+      console.warn("Auth token invalid or expired, clearing session:", err);
+      setStoredToken(null);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
+
+  const signOut = useCallback(() => {
+    api.auth.logout();
+    setUser(null);
+    setActiveRoleOverride(null);
+  }, []);
+
+  const roles = (user?.roles || []) as AppRole[];
   const isAdmin = roles.includes("admin");
   const isExpert = roles.includes("expert");
   const primaryRole: AppRole = isAdmin ? "admin" : isExpert ? "expert" : "seller";
+  const activeRole: AppRole = activeRoleOverride && roles.includes(activeRoleOverride) ? activeRoleOverride : primaryRole;
 
-  return { session, user, roles, isAdmin, isExpert, primaryRole, loading };
+  return {
+    user,
+    profile: user?.profile || null,
+    roles,
+    isAdmin,
+    isExpert,
+    primaryRole,
+    activeRole,
+    setActiveRole: setActiveRoleOverride,
+    loading,
+    refreshUser,
+    signOut,
+  };
 }

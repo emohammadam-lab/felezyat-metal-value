@@ -110,6 +110,17 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('felezyaft-theme') === 'light') {
+                  document.documentElement.classList.add('light');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
         <HeadContent />
       </head>
       <body>

@@ -8,7 +8,10 @@ export function ThemeToggle({ className }: { className?: string }) {
   const [light, setLight] = useState(false);
 
   useEffect(() => {
-    setLight(document.documentElement.classList.contains("light"));
+    const saved = localStorage.getItem(KEY);
+    const isLight = saved === "light" || document.documentElement.classList.contains("light");
+    setLight(isLight);
+    document.documentElement.classList.toggle("light", isLight);
   }, []);
 
   function toggle() {
@@ -28,10 +31,10 @@ export function ThemeToggle({ className }: { className?: string }) {
       size="icon"
       onClick={toggle}
       className={className}
-      aria-label="تغییر رنگ صفحه"
+      aria-label="تغییر تم رنگی"
       title={light ? "حالت تیره" : "حالت روشن"}
     >
-      {light ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+      {light ? <Moon className="w-4 h-4 text-primary" /> : <Sun className="w-4 h-4 text-warning" />}
     </Button>
   );
 }

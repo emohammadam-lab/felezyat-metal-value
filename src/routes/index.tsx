@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { supabase } from "@/integrations/supabase/client";
+import { api, type PricingConfig } from "@/lib/api";
 import { calcEstimatedPrice, formatToman, formatNumber, SCRAP_TYPE_LABELS } from "@/lib/format";
 
 export const Route = createFileRoute("/")({
@@ -23,18 +23,25 @@ const PURITY_DEFAULT: Record<string, number> = {
 };
 
 function Landing() {
-  const [pricing, setPricing] = useState<any>(null);
+  const [pricing, setPricing] = useState<PricingConfig | null>(null);
   const [scrapType, setScrapType] = useState("coated_cable");
   const [weight, setWeight] = useState("");
   const [purity, setPurity] = useState(PURITY_DEFAULT.coated_cable);
 
   useEffect(() => {
-    supabase
-      .from("pricing_config")
-      .select("*")
-      .eq("id", 1)
-      .maybeSingle()
-      .then(({ data }) => data && setPricing(data));
+    api.pricing.get()
+      .then((data) => setPricing(data))
+      .catch((err) => {
+        console.warn("Could not fetch pricing from backend, using defaults", err);
+        setPricing({
+          id: 1,
+          copper_price_usd: 9.5,
+          usd_rate: 900000,
+          fee_percent: 3.0,
+          deduction_percent: 2.0,
+          updated_at: new Date().toISOString(),
+        });
+      });
   }, []);
 
   useEffect(() => {
@@ -53,20 +60,23 @@ function Landing() {
     });
   }, [pricing, weight, purity]);
 
-  const perKgAt100 = pricing ? Math.round(Number(pricing.copper_price_usd) * Number(pricing.usd_rate)) : null;
+  // usd_rate is in Rials -> divide by 10 to get Tomans per kg
+  const perKgAt100 = pricing ? Math.round(Number(pricing.copper_price_usd) * (Number(pricing.usd_rate) / 10)) : null;
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--gradient-warm)" }}>
-      <header className="border-b border-border/60 backdrop-blur bg-background/70 sticky top-0 z-30">
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--gradient-warm)" }}>
+      <header className="border-b border-border/60 backdrop-blur bg-background/80 sticky top-0 z-40 transition-colors">
         <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>ف</div>
-            <div className="font-bold text-lg">فلزیافت</div>
-          </div>
+          <Link to="/" className="flex items-center gap-2">
+            <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold shadow-sm" style={{ background: "var(--gradient-copper)" }}>
+              ف
+            </div>
+            <div className="font-extrabold text-lg">فلزیافت</div>
+          </Link>
           <nav className="flex items-center gap-2">
             <ThemeToggle />
-            <Link to="/auth"><Button variant="ghost">ورود</Button></Link>
-            <Link to="/auth"><Button>شروع فروش</Button></Link>
+            <Link to="/auth"><Button variant="ghost" size="sm">ورود</Button></Link>
+            <Link to="/auth"><Button size="sm">شروع فروش</Button></Link>
           </nav>
         </div>
       </header>

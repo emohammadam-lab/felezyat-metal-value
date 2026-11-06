@@ -52,7 +52,9 @@ export function calcEstimatedPrice(params: {
   feePercent: number;
   deductionPercent: number;
 }): number {
-  const gross = params.weightKg * params.copperUsd * params.usdRate * (params.purityPercent / 100);
+  // usd_rate in pricing_config is stored in Rials; convert to Tomans (/ 10)
+  const usdRateToman = params.usdRate / 10;
+  const gross = params.weightKg * params.copperUsd * usdRateToman * (params.purityPercent / 100);
   const afterDeduction = gross * (1 - params.deductionPercent / 100);
   const afterFee = afterDeduction * (1 - params.feePercent / 100);
   return Math.max(0, Math.round(afterFee));

@@ -8,26 +8,42 @@ export const Route = createFileRoute("/_authenticated/admin/roadmap")({
 });
 
 const ITEMS = [
-  { done: true, title: "نسخه اولیه پنل فروشنده / کارشناس / مدیر" },
-  { done: true, title: "موتور قیمت‌گذاری زنده و کیف پول دیجیتال" },
-  { done: false, title: "احراز هویت پیامکی و KYC" },
-  { done: false, title: "درگاه پرداخت و برداشت به حساب" },
-  { done: false, title: "خلوص‌سنجی تصویری با هوش مصنوعی" },
-  { done: false, title: "پنل مزایده آنلاین محموله‌ها" },
-  { done: false, title: "توسعه به مس مصرفی و سایر فلزات (آلومینیوم، آهن)" },
-  { done: false, title: "شبکه ذوب امین و صدور شمش تایید شده" },
+  { done: true, title: "مهاجرت کامل به بک‌اند پایتون (FastAPI + SQLAlchemy + JWT Auth)" },
+  { done: true, title: "طراحی کاملاً واکنش‌گرا (Responsive) سازگار با موبایل و تبلت" },
+  { done: true, title: "سامانه احراز هویت، پروفایل کاربری، کد ملی و مدیریت شماره شبا" },
+  { done: true, title: "پنل اختصاصی فروشنده با پیگیری بصری مراحل سفارش و کیف پول" },
+  { done: true, title: "پنل جامع مدیریت با کنترل کاربران، KYC، تعیین نقش و تسویه آنی" },
+  { done: true, title: "پنل کارشناسی متالورژی با تعیین خلوص، کسورات و ثبت باسکول" },
+  { done: true, title: "موتور قیمت‌گذاری زنده مس و ارز با پیش‌نمایش بلادرنگ محاسبات" },
+  { done: true, title: "سیستم گردش حساب، تسویه مالی و ثبت شماره پیگیری بانکی (پایا/ساتنا)" },
+  { done: false, title: "احراز هویت پیامکی دو مرحله‌ای (SMS OTP)" },
+  { done: false, title: "خلوص‌سنجی هوشمند تصویری با هوش مصنوعی (AI Scrap Vision)" },
+  { done: false, title: "تالار حراج و مزایده آنلاین محموله‌ها برای کارخانجات ذوب" },
+  { done: false, title: "پشتیبانی از سایر فلزات بازیافتی (آلومینیوم، برنج، سرب و برنز)" },
 ];
 
 function Roadmap() {
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-3xl font-extrabold mb-6">نقشه راه محصول</h1>
-      <Card className="p-6">
-        <ul className="space-y-3">
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">نقشه راه توسعه پلتفرم فلزیافت</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          روند پیشرفت امکانات توسعه‌یافته و اهداف فازهای بعدی پلتفرم
+        </p>
+      </div>
+
+      <Card className="p-6 shadow-xs">
+        <ul className="space-y-3.5">
           {ITEMS.map((it) => (
             <li key={it.title} className="flex items-start gap-3">
-              {it.done ? <CheckCircle2 className="w-5 h-5 text-success shrink-0 mt-0.5" /> : <Circle className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />}
-              <span className={it.done ? "text-foreground" : "text-muted-foreground"}>{it.title}</span>
+              {it.done ? (
+                <CheckCircle2 className="w-5 h-5 text-success shrink-0 mt-0.5" />
+              ) : (
+                <Circle className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+              )}
+              <span className={`text-sm ${it.done ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
+                {it.title}
+              </span>
             </li>
           ))}
         </ul>
