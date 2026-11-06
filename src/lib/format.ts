@@ -35,13 +35,13 @@ export const STATUS_LABELS: Record<string, string> = {
 };
 
 export const STATUS_TONE: Record<string, string> = {
-  registered: "bg-secondary text-secondary-foreground",
-  awaiting_expert: "bg-warning/20 text-warning-foreground border border-warning/40",
-  price_offered: "bg-accent/15 text-accent border border-accent/30",
-  seller_approved: "bg-primary/15 text-primary border border-primary/30",
-  weighed: "bg-primary/25 text-primary border border-primary/40",
-  settled: "bg-success/20 text-success border border-success/40",
-  rejected: "bg-destructive/15 text-destructive border border-destructive/30",
+  registered: "bg-secondary text-secondary-foreground ring-1 ring-border",
+  awaiting_expert: "bg-warning/12 text-warning ring-1 ring-warning/30",
+  price_offered: "bg-accent/12 text-accent ring-1 ring-accent/30",
+  seller_approved: "bg-primary/12 text-primary ring-1 ring-primary/30",
+  weighed: "bg-primary/20 text-primary ring-1 ring-primary/40",
+  settled: "bg-success/12 text-success ring-1 ring-success/30",
+  rejected: "bg-destructive/12 text-destructive ring-1 ring-destructive/30",
 };
 
 export function calcEstimatedPrice(params: {

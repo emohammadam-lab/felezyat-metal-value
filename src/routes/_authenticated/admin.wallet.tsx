@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader, Spinner, StatCard } from "@/components/app/kit";
+import { Wallet as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -136,70 +138,45 @@ function AdminWalletPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">مدیریت مالی، تسویه و برداشت‌ها</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            بررسی و واریز درخواست‌های برداشت بانکی کاربران، تعدیل دستی موجودی و گزارش تراکنش‌ها
-          </p>
-        </div>
+        <PageHeader icon={PageIcon} eyebrow="امور مالی" title="مدیریت مالی، تسویه و برداشت‌ها" description="بررسی و واریز درخواست‌های برداشت بانکی کاربران، تعدیل دستی موجودی و گزارش تراکنش‌ها" />
 
         {/* Adjust Balance Dialog Trigger */}
-        <Button onClick={openAdjustDialog} variant="outline" className="gap-2 shadow-xs">
+        <Button onClick={openAdjustDialog} variant="outline" className="gap-2">
           <SlidersHorizontal className="w-4 h-4" />
           تعدیل موجودی کاربر
         </Button>
       </div>
 
       {/* Summary KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <Card className="p-5 flex flex-col justify-between">
-          <span className="text-xs text-muted-foreground font-medium">درخواست‌های برداشت در انتظار پرداخت</span>
-          <div className="text-2xl font-black text-warning mt-2 flex items-center gap-2">
-            <Clock className="w-5 h-5" />
-            {pendingCount} مورد
-          </div>
-        </Card>
-
-        <Card className="p-5 flex flex-col justify-between">
-          <span className="text-xs text-muted-foreground font-medium">مجموع مبالغ واریز شده به شبا</span>
-          <div className="text-2xl font-black text-success mt-2 flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5" />
-            {formatToman(totalPaid)}
-          </div>
-        </Card>
-
-        <Card className="p-5 flex flex-col justify-between col-span-2 md:col-span-1">
-          <span className="text-xs text-muted-foreground font-medium">کل تراکنش‌های ثبت شده سیستم</span>
-          <div className="text-2xl font-black text-primary mt-2 flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5" />
-            {transactions.length} تراکنش
-          </div>
-        </Card>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+        <StatCard icon={Clock} tone="warning" label="درخواست‌های برداشت در انتظار پرداخت" value={`${pendingCount} مورد`} />
+        <StatCard icon={CheckCircle2} tone="success" label="مجموع مبالغ واریز شده به شبا" value={formatToman(totalPaid)} />
+        <StatCard icon={FileSpreadsheet} tone="primary" label="کل تراکنش‌های ثبت شده سیستم" value={`${transactions.length} تراکنش`} className="col-span-2 md:col-span-1" />
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-border text-sm">
+      <div className="segmented w-fit max-w-full">
         <button
           onClick={() => setActiveTab("withdrawals")}
-          className={`py-2.5 px-4 font-bold border-b-2 transition-colors flex items-center gap-2 ${
+          className={`py-2 px-4 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
             activeTab === "withdrawals"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
+              : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06]"
           }`}
         >
           <span>درخواست‌های تسویه بانکی</span>
           {pendingCount > 0 && (
-            <span className="bg-warning text-warning-foreground text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+            <span className="bg-warning text-black/80 text-[10px] px-1.5 py-0.5 rounded-full font-bold">
               {pendingCount}
             </span>
           )}
         </button>
         <button
           onClick={() => setActiveTab("transactions")}
-          className={`py-2.5 px-4 font-bold border-b-2 transition-colors ${
+          className={`py-2 px-4 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
             activeTab === "transactions"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
+              : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06]"
           }`}
         >
           دفتر کل تراکنش‌ها ({transactions.length})
@@ -208,18 +185,15 @@ function AdminWalletPage() {
 
       {/* Tab Content */}
       {activeTab === "withdrawals" ? (
-        <Card className="p-0 overflow-hidden shadow-xs">
+        <Card className="p-0 overflow-hidden">
           {loading ? (
-            <div className="text-center py-16 text-muted-foreground flex flex-col items-center gap-3">
-              <div className="h-7 w-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              <span>در حال بارگذاری درخواست‌ها...</span>
-            </div>
+            <Spinner label="در حال بارگذاری درخواست‌ها..." />
           ) : withdrawals.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">هیچ درخواست تسویه‌ای ثبت نشده است.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-right text-xs md:text-sm">
-                <thead className="bg-secondary/60 text-muted-foreground border-b border-border">
+                <thead className="bg-foreground/[0.03] text-muted-foreground text-[11px] md:text-xs font-bold border-b border-border">
                   <tr>
                     <th className="p-3 md:p-4">کاربر</th>
                     <th className="p-3 md:p-4">مبلغ درخواستی</th>
@@ -231,7 +205,7 @@ function AdminWalletPage() {
                 </thead>
                 <tbody className="divide-y divide-border">
                   {withdrawals.map((w) => (
-                    <tr key={w.id} className="hover:bg-secondary/30 transition-colors">
+                    <tr key={w.id} className="hover:bg-primary/[0.04] transition-colors">
                       <td className="p-3 md:p-4">
                         <div className="font-bold text-foreground">{w.user_name || "کاربر"}</div>
                         {w.user_phone && <div className="text-xs text-muted-foreground font-mono">{w.user_phone}</div>}
@@ -292,10 +266,10 @@ function AdminWalletPage() {
           )}
         </Card>
       ) : (
-        <Card className="p-0 overflow-hidden shadow-xs">
+        <Card className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-right text-xs md:text-sm">
-              <thead className="bg-secondary/60 text-muted-foreground border-b border-border">
+              <thead className="bg-foreground/[0.03] text-muted-foreground text-[11px] md:text-xs font-bold border-b border-border">
                 <tr>
                   <th className="p-3 md:p-4">تاریخ</th>
                   <th className="p-3 md:p-4">نوع تراکنش</th>
@@ -306,7 +280,7 @@ function AdminWalletPage() {
               </thead>
               <tbody className="divide-y divide-border">
                 {transactions.map((t) => (
-                  <tr key={t.id} className="hover:bg-secondary/30 transition-colors">
+                  <tr key={t.id} className="hover:bg-primary/[0.04] transition-colors">
                     <td className="p-3 md:p-4 text-xs text-muted-foreground">{formatDate(t.created_at)}</td>
                     <td className="p-3 md:p-4">
                       <span className={`text-xs px-2 py-0.5 rounded font-medium ${t.type === "credit" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>

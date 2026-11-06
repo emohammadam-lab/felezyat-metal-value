@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader } from "@/components/app/kit";
+import { DollarSign as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,12 +98,7 @@ function PricingAdmin() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">تنظیم موتور قیمت‌گذاری زنده</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          تنظیم قیمت جهانی مس، نرخ تسعیر دلار به ریال، کارمزد پلتفرم و کسورات ناخالصی
-        </p>
-      </div>
+      <PageHeader icon={PageIcon} eyebrow="موتور قیمت" title="تنظیم موتور قیمت‌گذاری زنده" description="تنظیم قیمت جهانی مس، نرخ تسعیر دلار به ریال، کارمزد پلتفرم و کسورات ناخالصی" />
 
       <div className="grid md:grid-cols-2 gap-6 items-start">
         {/* Form Card */}

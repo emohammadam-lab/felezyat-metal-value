@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader } from "@/components/app/kit";
+import { Wallet as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,12 +100,7 @@ function WalletPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">کیف پول و تسویه حساب</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            مشاهده موجودی نقدی و ثبت درخواست تسویه به حساب بانکی
-          </p>
-        </div>
+        <PageHeader icon={PageIcon} eyebrow="کیف پول" title="کیف پول و تسویه حساب" description="مشاهده موجودی نقدی و ثبت درخواست تسویه به حساب بانکی" />
 
         {/* Withdrawal Dialog Button */}
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -139,7 +136,7 @@ function WalletPage() {
                   <button
                     type="button"
                     onClick={() => setWithdrawAmount(String(balance))}
-                    className="absolute left-2 top-2 text-xs text-primary font-bold hover:underline"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-primary font-bold rounded-lg bg-primary/10 px-2 py-1 hover:bg-primary/20"
                   >
                     کل موجودی
                   </button>
@@ -171,9 +168,11 @@ function WalletPage() {
 
       {/* Balance Hero Card */}
       <Card
-        className="p-6 md:p-8 text-primary-foreground border-0 shadow-lg relative overflow-hidden"
+        className="p-6 md:p-8 text-primary-foreground border-0 relative overflow-hidden rounded-3xl"
         style={{ background: "var(--gradient-copper)", boxShadow: "var(--shadow-copper)" }}
       >
+        <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none" />
+        <div className="absolute -left-8 -bottom-12 h-48 w-48 rounded-full bg-white/25 blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-sm text-primary-foreground/90 font-medium">
@@ -190,23 +189,23 @@ function WalletPage() {
       </Card>
 
       {/* Tabs */}
-      <div className="flex border-b border-border text-sm">
+      <div className="segmented w-fit max-w-full">
         <button
           onClick={() => setActiveTab("tx")}
-          className={`py-2.5 px-4 font-bold border-b-2 transition-colors ${
+          className={`py-2 px-4 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
             activeTab === "tx"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
+              : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06]"
           }`}
         >
           گردش حساب و تراکنش‌ها ({tx.length})
         </button>
         <button
           onClick={() => setActiveTab("wd")}
-          className={`py-2.5 px-4 font-bold border-b-2 transition-colors ${
+          className={`py-2 px-4 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
             activeTab === "wd"
-              ? "border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-foreground"
+              ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
+              : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06]"
           }`}
         >
           درخواست‌های برداشت ({withdrawals.length})
@@ -215,7 +214,7 @@ function WalletPage() {
 
       {/* Tab Content */}
       {activeTab === "tx" ? (
-        <Card className="p-4 md:p-6 shadow-xs">
+        <Card className="p-4 md:p-6">
           {tx.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground text-sm">
               هنوز تراکنشی در این حساب ثبت نشده است.
@@ -265,7 +264,7 @@ function WalletPage() {
           )}
         </Card>
       ) : (
-        <Card className="p-4 md:p-6 shadow-xs">
+        <Card className="p-4 md:p-6">
           {withdrawals.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground text-sm">
               هیچ درخواست برداشتی ثبت نشده است.

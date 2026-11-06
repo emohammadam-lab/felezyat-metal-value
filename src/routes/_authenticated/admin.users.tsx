@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader, Spinner } from "@/components/app/kit";
+import { Users as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -163,12 +165,7 @@ function UsersPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">مدیریت کاربران و نقش‌ها</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            مشاهده، جستجو، احراز هویت (KYC)، اعطای نقش‌های سیستمی و مدیریت دسترسی‌ها
-          </p>
-        </div>
+        <PageHeader icon={PageIcon} eyebrow="کاربران" title="مدیریت کاربران و نقش‌ها" description="مشاهده، جستجو، احراز هویت (KYC)، اعطای نقش‌های سیستمی و مدیریت دسترسی‌ها" />
 
         {/* Create User Button & Dialog */}
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
@@ -264,9 +261,9 @@ function UsersPage() {
             <button
               key={tab.id}
               onClick={() => setRoleFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+              className={`px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold whitespace-nowrap transition-all ${
                 roleFilter === tab.id
-                  ? "bg-primary text-primary-foreground shadow-sm"
+                  ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
                   : "bg-secondary/40 text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -277,18 +274,15 @@ function UsersPage() {
       </div>
 
       {/* Users Table */}
-      <Card className="overflow-hidden shadow-xs">
+      <Card className="overflow-hidden">
         {loading ? (
-          <div className="text-center py-16 text-muted-foreground flex flex-col items-center gap-3">
-            <div className="h-7 w-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <span>در حال بارگذاری کاربران...</span>
-          </div>
+          <Spinner label="در حال بارگذاری کاربران..." />
         ) : users.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">کاربری با این مشخصات یافت نشد.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-right text-xs md:text-sm">
-              <thead className="bg-secondary/60 text-muted-foreground border-b border-border">
+              <thead className="bg-foreground/[0.03] text-muted-foreground text-[11px] md:text-xs font-bold border-b border-border">
                 <tr>
                   <th className="p-3 md:p-4">کاربر</th>
                   <th className="p-3 md:p-4">تماس و هویت</th>
@@ -301,7 +295,7 @@ function UsersPage() {
                 {users.map((u) => {
                   const isVerified = Boolean(u.profile?.verified);
                   return (
-                    <tr key={u.id} className="hover:bg-secondary/30 transition-colors">
+                    <tr key={u.id} className="hover:bg-primary/[0.04] transition-colors">
                       <td className="p-3 md:p-4">
                         <div className="font-bold text-foreground">
                           {u.profile?.full_name || "بدون نام"}

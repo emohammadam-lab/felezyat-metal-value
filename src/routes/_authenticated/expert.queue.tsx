@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader, Spinner, StatusPill } from "@/components/app/kit";
+import { ClipboardList as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,15 +55,10 @@ function ExpertQueue() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">کارتابل کارشناسی و توزین متالورژی</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          بررسی درصد خلوص، تعیین کسورات پالایش، اعلام قیمت قطعی و ثبت وزن نهایی باسکول
-        </p>
-      </div>
+      <PageHeader icon={PageIcon} eyebrow="کارشناسی" title="کارتابل کارشناسی و توزین متالورژی" description="بررسی درصد خلوص، تعیین کسورات پالایش، اعلام قیمت قطعی و ثبت وزن نهایی باسکول" />
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-border text-xs md:text-sm">
+      <div className="segmented">
         {[
           { id: "all", label: "تمام سفارش‌ها" },
           { id: "awaiting_expert", label: "نیازمند کارشناسی اولیه" },
@@ -72,10 +69,10 @@ function ExpertQueue() {
           <button
             key={tab.id}
             onClick={() => setStatusFilter(tab.id)}
-            className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+            className={`px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold whitespace-nowrap transition-all ${
               statusFilter === tab.id
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
+                : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
             }`}
           >
             {tab.label}
@@ -84,10 +81,7 @@ function ExpertQueue() {
       </div>
 
       {loading ? (
-        <div className="text-center py-16 text-muted-foreground flex flex-col items-center gap-3">
-          <div className="h-7 w-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <span>در حال دریافت لیست محموله‌ها...</span>
-        </div>
+        <Spinner label="در حال دریافت لیست محموله‌ها..." />
       ) : items.length === 0 ? (
         <Card className="p-12 text-center text-muted-foreground">
           محموله‌ای در این وضعیت وجود ندارد.
@@ -209,7 +203,7 @@ function ExpertShipmentCard({
   }
 
   return (
-    <Card className="p-5 shadow-xs border-border/80">
+    <Card className="p-5 transition-all hover:border-primary/30">
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div className="space-y-2.5">
           <div className="flex items-center gap-2 flex-wrap">
@@ -285,9 +279,7 @@ function ExpertShipmentCard({
 
         {/* Status and Price */}
         <div className="text-left flex flex-col justify-between items-start md:items-end gap-2 shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-border">
-          <span className={"text-xs px-2.5 py-1 rounded-full font-bold " + (STATUS_TONE[s.status] || "bg-secondary")}>
-            {STATUS_LABELS[s.status] || s.status}
-          </span>
+          <StatusPill status={s.status} />
           <div>
             <div className="text-xs text-muted-foreground">ارزش تخمینی اولیه: {formatToman(s.estimated_price)}</div>
             {s.final_price && (

@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "./backend/venv/bin/python3",
+      "runtimeArgs": ["-m", "uvicorn", "backend.main:app", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "dev", "--port", "5173"],
+      "port": 5173
+    }
+  ]
+}

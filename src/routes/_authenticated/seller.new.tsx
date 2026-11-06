@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader } from "@/components/app/kit";
+import { PlusCircle as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -112,12 +114,7 @@ function NewShipment() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">ثبت محموله جدید ضایعات مس</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          مشخصات بار را وارد کنید؛ کارشناس فلزیافت برای بازبینی و قیمت‌گذاری اولیه محموله را بررسی خواهد کرد.
-        </p>
-      </div>
+      <PageHeader icon={PageIcon} eyebrow="محموله جدید" title="ثبت محموله جدید ضایعات مس" description="مشخصات بار را وارد کنید؛ کارشناس فلزیافت برای بازبینی و قیمت‌گذاری اولیه محموله را بررسی خواهد کرد." />
 
       <form onSubmit={submit} className="grid md:grid-cols-3 gap-6 items-start">
         <Card className="p-5 md:p-6 md:col-span-2 space-y-5">

@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app/shell";
+import { PageHeader, Spinner, StatusPill } from "@/components/app/kit";
+import { ListOrdered as PageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -88,12 +90,7 @@ function Orders() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">سفارش‌ها و محموله‌های من</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            پیگیری وضعیت کارشناسی، تایید قیمت، بارگیری و تسویه مالی
-          </p>
-        </div>
+        <PageHeader icon={PageIcon} eyebrow="سفارش‌ها" title="سفارش‌ها و محموله‌های من" description="پیگیری وضعیت کارشناسی، تایید قیمت، بارگیری و تسویه مالی" />
         <Link to="/seller/new">
           <Button className="gap-2 shadow-sm">
             <PlusCircle className="w-4 h-4" />
@@ -103,7 +100,7 @@ function Orders() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-border text-xs md:text-sm">
+      <div className="segmented">
         {[
           { id: "all", label: "همه محموله‌ها" },
           { id: "awaiting_expert", label: "در انتظار کارشناسی" },
@@ -116,10 +113,10 @@ function Orders() {
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id)}
-            className={`px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
+            className={`px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold whitespace-nowrap transition-all ${
               filter === tab.id
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                ? "copper-fill shadow-[0_6px_18px_-8px_var(--color-primary)]"
+                : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
             }`}
           >
             {tab.label}
@@ -128,10 +125,7 @@ function Orders() {
       </div>
 
       {loading ? (
-        <div className="text-center py-16 text-muted-foreground flex flex-col items-center gap-3">
-          <div className="h-7 w-7 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <span>در حال دریافت سفارش‌ها...</span>
-        </div>
+        <Spinner label="در حال دریافت سفارش‌ها..." />
       ) : items.length === 0 ? (
         <Card className="p-12 text-center text-muted-foreground space-y-4">
           <Package className="w-12 h-12 mx-auto text-muted-foreground/40" />
@@ -146,7 +140,7 @@ function Orders() {
       ) : (
         <div className="space-y-4">
           {items.map((s) => (
-            <Card key={s.id} className="p-5 md:p-6 shadow-xs border-border/80">
+            <Card key={s.id} className="p-5 md:p-6 transition-all hover:border-primary/30">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -228,9 +222,7 @@ function Orders() {
 
                 {/* Price and Status Box */}
                 <div className="text-left flex flex-col justify-between items-start md:items-end gap-2 shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-border">
-                  <span className={"text-xs px-2.5 py-1 rounded-full font-bold " + (STATUS_TONE[s.status] || "bg-secondary")}>
-                    {STATUS_LABELS[s.status] || s.status}
-                  </span>
+                  <StatusPill status={s.status} />
 
                   <div>
                     <div className="text-xs text-muted-foreground">

@@ -8,15 +8,14 @@ import {
   Wallet,
   ClipboardList,
   Users,
-  Settings,
+  Map as MapIcon,
   DollarSign,
   UserCheck,
   ShieldAlert,
   Menu,
   X,
   User as UserIcon,
-  ChevronDown,
-  Lock,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandMark, Wordmark } from "@/components/app/kit";
 import { useAuth, type AppRole } from "@/lib/use-auth";
 import { api, type UserProfile } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -52,9 +52,15 @@ const NAV: Record<AppRole, NavItem[]> = {
     { to: "/admin/users", label: "مدیریت کاربران و نقش‌ها", icon: Users },
     { to: "/admin/pricing", label: "تنظیم قیمت مس و دلار", icon: DollarSign },
     { to: "/admin/wallet", label: "تسویه و درخواست‌های برداشت", icon: Wallet },
-    { to: "/admin/roadmap", label: "نقشه راه محصول", icon: Settings },
+    { to: "/admin/roadmap", label: "نقشه راه محصول", icon: MapIcon },
   ],
 };
+
+const ROLE_LABEL: Record<AppRole, string> = { admin: "مدیر کل", expert: "کارشناس", seller: "فروشنده" };
+
+function isActive(pathname: string, to: string) {
+  return pathname === to || (to !== "/dashboard" && pathname.startsWith(to));
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, profile, roles, activeRole, setActiveRole, loading, signOut, refreshUser } = useAuth();
@@ -71,116 +77,137 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, [loading, user, navigate]);
 
   const items = NAV[activeRole] || NAV.seller;
-  const roleLabel = activeRole === "admin" ? "مدیر کل" : activeRole === "expert" ? "کارشناس" : "فروشنده";
+  const roleLabel = ROLE_LABEL[activeRole] ?? "فروشنده";
+  const current = items.find((it) => isActive(pathname, it.to));
+  const initial = profile?.full_name ? profile.full_name[0] : user?.email?.[0]?.toUpperCase() || "U";
+
+  const roleSwitcher = (onPick?: () => void) =>
+    roles.length > 1 && (
+      <div className="rounded-2xl bg-sidebar-accent/60 p-1 flex gap-1">
+        {roles.map((r) => (
+          <button
+            key={r}
+            onClick={() => {
+              setActiveRole(r);
+              onPick?.();
+            }}
+            className={cn(
+              "flex-1 text-xs py-1.5 px-1.5 rounded-xl transition-all text-center font-bold",
+              activeRole === r
+                ? "copper-fill shadow-[0_6px_16px_-8px_var(--color-primary)]"
+                : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-white/5",
+            )}
+          >
+            {r === "admin" ? "مدیر" : r === "expert" ? "کارشناس" : "فروشنده"}
+          </button>
+        ))}
+      </div>
+    );
+
+  const navList = (onPick?: () => void) => (
+    <nav className="space-y-1">
+      <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/40">منوی اصلی</div>
+      {items.map((it) => {
+        const active = isActive(pathname, it.to);
+        return (
+          <Link
+            key={it.to}
+            to={it.to}
+            onClick={onPick}
+            className={cn(
+              "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
+              active
+                ? "bg-gradient-to-l from-primary/20 to-primary/5 text-sidebar-foreground ring-1 ring-primary/30"
+                : "text-sidebar-foreground/65 hover:bg-white/[0.05] hover:text-sidebar-foreground",
+            )}
+          >
+            {active && <span className="absolute -right-3 top-2 bottom-2 w-1 rounded-l-full bg-primary" />}
+            <span
+              className={cn(
+                "h-8 w-8 rounded-lg flex items-center justify-center shrink-0 transition-all",
+                active ? "copper-fill" : "bg-white/[0.04] group-hover:bg-white/[0.08]",
+              )}
+            >
+              <it.icon className="w-4 h-4" />
+            </span>
+            <span className="truncate">{it.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-background text-foreground transition-colors" style={{ background: "var(--gradient-warm)" }}>
+    <div className="min-h-screen flex flex-col md:flex-row text-foreground">
       {/* ---------------- Desktop Sidebar ---------------- */}
-      <aside className="hidden md:flex w-64 shrink-0 flex-col border-l border-sidebar-border bg-sidebar text-sidebar-foreground">
-        {/* Brand */}
-        <div className="p-4 border-b border-sidebar-border flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl flex items-center justify-center text-primary-foreground font-bold shadow-sm" style={{ background: "var(--gradient-copper)" }}>
-              ف
-            </div>
-            <div>
-              <div className="font-extrabold text-base leading-tight">فلزیافت</div>
-              <div className="text-xs text-sidebar-foreground/70">پنل {roleLabel}</div>
-            </div>
+      <aside className="hidden md:flex w-72 shrink-0 flex-col bg-sidebar text-sidebar-foreground sticky top-0 h-screen overflow-hidden border-l border-sidebar-border">
+        <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-primary/15 blur-[90px] pointer-events-none" />
+
+        <div className="relative px-5 pt-6 pb-5">
+          <Link to="/">
+            <Wordmark sub={<span className="text-sidebar-foreground/55">پنل {roleLabel}</span>} />
           </Link>
-          <ThemeToggle />
         </div>
 
-        {/* Multi-role Switcher (If user has multiple roles) */}
-        {roles.length > 1 && (
-          <div className="p-3 border-b border-sidebar-border bg-sidebar-accent/30">
-            <div className="text-[11px] text-sidebar-foreground/70 mb-1.5 font-medium">تغییر نمای نقش:</div>
-            <div className="flex gap-1">
-              {roles.map((r) => (
-                <button
-                  key={r}
-                  onClick={() => setActiveRole(r)}
-                  className={cn(
-                    "flex-1 text-xs py-1 px-1.5 rounded-md transition-colors text-center font-medium",
-                    activeRole === r
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-sidebar-accent hover:bg-sidebar-accent/80 text-sidebar-foreground/80"
-                  )}
-                >
-                  {r === "admin" ? "مدیر" : r === "expert" ? "کارشناس" : "فروشنده"}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {roles.length > 1 && <div className="relative px-4 pb-4">{roleSwitcher()}</div>}
 
-        {/* Navigation Links */}
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          {items.map((it) => {
-            const active = pathname === it.to || (it.to !== "/dashboard" && pathname.startsWith(it.to));
-            return (
-              <Link
-                key={it.to}
-                to={it.to}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                    : "hover:bg-sidebar-accent text-sidebar-foreground/80 hover:text-sidebar-foreground"
-                )}
-              >
-                <it.icon className="w-4 h-4 shrink-0" />
-                <span>{it.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="relative flex-1 overflow-y-auto px-3 py-2">{navList()}</div>
 
-        {/* User Profile Card & Sign Out */}
-        <div className="p-3 border-t border-sidebar-border bg-sidebar-accent/20">
+        {activeRole === "seller" && profile && !profile.verified && (
           <button
             onClick={() => setProfileModalOpen(true)}
-            className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-sidebar-accent text-right transition-colors"
+            className="relative mx-4 mb-3 rounded-2xl p-4 text-right bg-gradient-to-br from-warning/20 to-warning/5 ring-1 ring-warning/30 hover:ring-warning/60 transition-all"
           >
-            <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0">
-              {profile?.full_name ? profile.full_name[0] : user?.email?.[0]?.toUpperCase() || "U"}
+            <div className="flex items-center gap-2 text-sm font-bold text-warning">
+              <ShieldAlert className="w-4 h-4" />
+              تکمیل احراز هویت
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold truncate text-sidebar-foreground">
-                {profile?.full_name || "پروفایل من"}
-              </div>
-              <div className="text-[11px] truncate text-sidebar-foreground/60">{user?.email}</div>
-            </div>
-            {profile?.verified ? (
-              <UserCheck className="w-4 h-4 text-success shrink-0" title="احراز هویت شده" />
-            ) : (
-              <ShieldAlert className="w-4 h-4 text-warning shrink-0" title="نیاز به تکمیل هویت" />
-            )}
+            <p className="mt-1 text-[11px] leading-5 text-sidebar-foreground/70">برای برداشت وجه، کد ملی و شبا را ثبت کن.</p>
           </button>
+        )}
 
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full mt-2 justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 text-xs"
-            onClick={signOut}
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            خروج از حساب
-          </Button>
+        {/* User Profile Card & Sign Out */}
+        <div className="relative p-3 border-t border-sidebar-border">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setProfileModalOpen(true)}
+              className="flex-1 min-w-0 flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/[0.05] text-right transition-colors"
+            >
+              <div className="relative h-10 w-10 rounded-xl copper-fill flex items-center justify-center font-black text-sm shrink-0">
+                {initial}
+                <span
+                  className={cn(
+                    "absolute -bottom-0.5 -left-0.5 h-3.5 w-3.5 rounded-full border-2 border-sidebar",
+                    profile?.verified ? "bg-success" : "bg-warning",
+                  )}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-bold truncate">{profile?.full_name || "پروفایل من"}</div>
+                <div className="text-[11px] truncate text-sidebar-foreground/55" dir="ltr">{user?.email}</div>
+              </div>
+            </button>
+            <button
+              onClick={signOut}
+              title="خروج از حساب"
+              aria-label="خروج از حساب"
+              className="h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-sidebar-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* ---------------- Mobile Header Bar ---------------- */}
-      <header className="md:hidden border-b border-border/70 bg-background/90 backdrop-blur sticky top-0 z-30 px-4 h-14 flex items-center justify-between">
+      <header className="md:hidden border-b border-border/60 bg-background/75 backdrop-blur-xl sticky top-0 z-30 px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg flex items-center justify-center text-primary-foreground font-bold shadow-sm" style={{ background: "var(--gradient-copper)" }}>
-            ف
-          </div>
-          <span className="font-extrabold text-base">فلزیافت</span>
-          <span className="text-[11px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">{roleLabel}</span>
+          <BrandMark size={34} />
+          <span className="font-black text-base">فلزیافت</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/12 ring-1 ring-primary/25 text-primary font-bold">{roleLabel}</span>
         </Link>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={() => setProfileModalOpen(true)} aria-label="پروفایل">
             <UserIcon className="w-4 h-4" />
@@ -194,68 +221,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* ---------------- Mobile Slide Drawer ---------------- */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
-          <div className="relative w-4/5 max-w-xs bg-sidebar text-sidebar-foreground h-full flex flex-col p-4 shadow-2xl z-10">
-            <div className="flex items-center justify-between pb-4 border-b border-sidebar-border">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg flex items-center justify-center text-primary-foreground font-bold" style={{ background: "var(--gradient-copper)" }}>
-                  ف
-                </div>
-                <div className="font-bold text-sm">منوی دسترسی</div>
-              </div>
-              <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in" onClick={() => setMobileMenuOpen(false)} />
+          <div className="relative w-[85%] max-w-xs bg-sidebar text-sidebar-foreground h-full flex flex-col p-4 shadow-2xl z-10 animate-in slide-in-from-right duration-300">
+            <div className="flex items-center justify-between pb-4">
+              <Wordmark sub={<span className="text-sidebar-foreground/55">پنل {roleLabel}</span>} />
+              <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)} className="text-sidebar-foreground">
                 <X className="w-5 h-5" />
               </Button>
             </div>
 
-            {roles.length > 1 && (
-              <div className="py-3 border-b border-sidebar-border">
-                <div className="text-[11px] opacity-70 mb-1.5">تغییر نقش:</div>
-                <div className="flex gap-1">
-                  {roles.map((r) => (
-                    <button
-                      key={r}
-                      onClick={() => {
-                        setActiveRole(r);
-                        setMobileMenuOpen(false);
-                      }}
-                      className={cn(
-                        "flex-1 text-xs py-1 px-1.5 rounded text-center font-medium",
-                        activeRole === r ? "bg-primary text-primary-foreground" : "bg-sidebar-accent"
-                      )}
-                    >
-                      {r === "admin" ? "مدیر" : r === "expert" ? "کارشناس" : "فروشنده"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            {roles.length > 1 && <div className="pb-4">{roleSwitcher(() => setMobileMenuOpen(false))}</div>}
 
-            <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
-              {items.map((it) => {
-                const active = pathname === it.to || (it.to !== "/dashboard" && pathname.startsWith(it.to));
-                return (
-                  <Link
-                    key={it.to}
-                    to={it.to}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
-                      active ? "bg-sidebar-primary text-sidebar-primary-foreground" : "hover:bg-sidebar-accent"
-                    )}
-                  >
-                    <it.icon className="w-4 h-4" />
-                    <span>{it.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+            <div className="flex-1 overflow-y-auto py-2 px-1">{navList(() => setMobileMenuOpen(false))}</div>
 
-            <div className="pt-3 border-t border-sidebar-border space-y-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full justify-start gap-2 text-xs"
+            <div className="pt-3 border-t border-sidebar-border space-y-1">
+              <button
+                className="w-full flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-white/5"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   setProfileModalOpen(true);
@@ -263,37 +244,68 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <UserIcon className="w-4 h-4" />
                 ویرایش پروفایل و کد شبا
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start gap-2 text-destructive hover:bg-destructive/10 text-xs"
+              </button>
+              <button
+                className="w-full flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/10"
                 onClick={signOut}
               >
                 <LogOut className="w-4 h-4" />
                 خروج از حساب
-              </Button>
+              </button>
             </div>
           </div>
         </div>
       )}
 
       {/* ---------------- Main Content ---------------- */}
-      <main className="flex-1 overflow-x-hidden pb-16 md:pb-6">
-        <div className="max-w-6xl mx-auto p-4 md:p-8">{children}</div>
-      </main>
+      <div className="flex-1 min-w-0 flex flex-col">
+        {/* Desktop top bar */}
+        <div className="hidden md:flex sticky top-0 z-20 h-16 items-center justify-between px-8 border-b border-border/50 bg-background/60 backdrop-blur-xl">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">پنل {roleLabel}</span>
+            <ChevronLeft className="w-4 h-4 text-muted-foreground/60" />
+            <span className="font-bold">{current?.label ?? "داشبورد"}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {profile?.verified ? (
+              <span className="hidden lg:inline-flex items-center gap-1.5 text-xs font-bold text-success bg-success/10 ring-1 ring-success/25 px-2.5 py-1 rounded-full">
+                <UserCheck className="w-3.5 h-3.5" /> احراز هویت شده
+              </span>
+            ) : (
+              <button
+                onClick={() => setProfileModalOpen(true)}
+                className="hidden lg:inline-flex items-center gap-1.5 text-xs font-bold text-warning bg-warning/10 ring-1 ring-warning/25 px-2.5 py-1 rounded-full hover:bg-warning/20"
+              >
+                <ShieldAlert className="w-3.5 h-3.5" /> نیاز به تکمیل هویت
+              </button>
+            )}
+            <ThemeToggle />
+            <button
+              onClick={() => setProfileModalOpen(true)}
+              className="h-9 w-9 rounded-xl copper-fill flex items-center justify-center font-black text-sm"
+              aria-label="پروفایل"
+            >
+              {initial}
+            </button>
+          </div>
+        </div>
+
+        <main className="flex-1 overflow-x-hidden pb-24 md:pb-10">
+          <div className="max-w-6xl mx-auto px-4 py-6 md:px-8 md:py-8">{children}</div>
+        </main>
+      </div>
 
       {/* ---------------- Mobile Bottom Navigation Bar ---------------- */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-20 border-t border-border/80 bg-background/95 backdrop-blur flex items-center justify-around py-2 px-1">
+      <div className="md:hidden fixed bottom-3 inset-x-3 z-20 rounded-2xl border border-border/70 bg-card/85 backdrop-blur-xl shadow-2xl flex items-center justify-around p-1.5">
         {items.slice(0, 4).map((it) => {
-          const active = pathname === it.to || (it.to !== "/dashboard" && pathname.startsWith(it.to));
+          const active = isActive(pathname, it.to);
           return (
             <Link
               key={it.to}
               to={it.to}
               className={cn(
-                "flex flex-col items-center gap-1 text-[11px] font-medium py-1 px-2 rounded-md transition-colors",
-                active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                "flex-1 flex flex-col items-center gap-1 text-[10px] font-bold py-1.5 rounded-xl transition-all",
+                active ? "copper-fill" : "text-muted-foreground hover:text-foreground",
               )}
             >
               <it.icon className="w-5 h-5" />
@@ -390,7 +402,7 @@ function ProfileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
+          <DialogTitle className="flex items-center justify-between gap-3 pl-8 text-right">
             <span>پروفایل و احراز هویت کاربر</span>
             {profile?.verified ? (
               <span className="text-xs px-2 py-0.5 rounded-full bg-success/15 text-success border border-success/30 font-medium">
@@ -404,17 +416,17 @@ function ProfileDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex border-b border-border mb-4">
+        <div className="flex rounded-xl border border-border bg-background/50 p-1 mb-2">
           <button
             type="button"
-            className={cn("flex-1 py-2 text-sm font-bold border-b-2 text-center", tab === "info" ? "border-primary text-primary" : "border-transparent text-muted-foreground")}
+            className={cn("flex-1 py-2 text-sm font-bold rounded-lg text-center transition-all", tab === "info" ? "copper-fill" : "text-muted-foreground hover:text-foreground")}
             onClick={() => setTab("info")}
           >
             مشخصات فردی و بانکی
           </button>
           <button
             type="button"
-            className={cn("flex-1 py-2 text-sm font-bold border-b-2 text-center", tab === "password" ? "border-primary text-primary" : "border-transparent text-muted-foreground")}
+            className={cn("flex-1 py-2 text-sm font-bold rounded-lg text-center transition-all", tab === "password" ? "copper-fill" : "text-muted-foreground hover:text-foreground")}
             onClick={() => setTab("password")}
           >
             تغییر رمز عبور

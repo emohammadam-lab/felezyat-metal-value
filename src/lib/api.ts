@@ -138,12 +138,12 @@ export interface WithdrawalRequest {
 }
 
 export interface AdminStats {
-  total_users: int;
-  verified_users: int;
-  total_shipments: int;
-  pending_expert_shipments: int;
-  ready_settle_shipments: int;
-  pending_withdrawals: int;
+  total_users: number;
+  verified_users: number;
+  total_shipments: number;
+  pending_expert_shipments: number;
+  ready_settle_shipments: number;
+  pending_withdrawals: number;
   total_volume_settled: number;
   total_weight_settled: number;
 }
@@ -158,7 +158,7 @@ export const api = {
 
   // Auth
   auth: {
-    async signup(payload: { email: string; password: str; full_name?: string; phone?: string }) {
+    async signup(payload: { email: string; password: string; full_name?: string; phone?: string }) {
       const res = await request<{ access_token: string }>("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -167,7 +167,7 @@ export const api = {
       return res;
     },
 
-    async login(payload: { email: string; password: str }) {
+    async login(payload: { email: string; password: string }) {
       const res = await request<{ access_token: string }>("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -180,7 +180,7 @@ export const api = {
       return request<UserData>("/api/auth/me");
     },
 
-    async changePassword(old_password: str, new_password: str) {
+    async changePassword(old_password: string, new_password: string) {
       return request<{ message: string }>("/api/auth/change-password", {
         method: "POST",
         body: JSON.stringify({ old_password, new_password }),
@@ -355,7 +355,7 @@ export const api = {
       return request<UserData[]>(`/api/admin/users${query}`);
     },
 
-    async createUser(data: { email: string; password: str; full_name?: string; phone?: string; roles: string[] }): Promise<UserData> {
+    async createUser(data: { email: string; password: string; full_name?: string; phone?: string; roles: string[] }): Promise<UserData> {
       return request<UserData>("/api/admin/users", {
         method: "POST",
         body: JSON.stringify(data),

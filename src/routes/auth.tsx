@@ -8,7 +8,8 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { api, getStoredToken } from "@/lib/api";
-import { ShieldCheck, UserCheck, Wrench } from "lucide-react";
+import { Coins, Scale, ShieldCheck, Sparkles, UserCheck, Wrench } from "lucide-react";
+import { BrandMark, Wordmark } from "@/components/app/kit";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -76,20 +77,63 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative" style={{ background: "var(--gradient-warm)" }}>
-      <div className="absolute top-4 left-4">
-        <ThemeToggle />
-      </div>
+    <div className="min-h-screen grid lg:grid-cols-[1fr_1.05fr]">
+      {/* Brand panel */}
+      <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden p-10 xl:p-14 bg-sidebar text-sidebar-foreground">
+        <div className="absolute inset-0 bg-grid opacity-70 pointer-events-none" />
+        <div className="absolute -bottom-40 -left-40 h-[34rem] w-[34rem] rounded-full bg-primary/25 blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/3 -right-20 h-72 w-72 rounded-full bg-accent/15 blur-[100px] pointer-events-none" />
 
-      <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center gap-2 justify-center mb-6">
-          <div className="h-10 w-10 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-sm" style={{ background: "var(--gradient-copper)" }}>
-            ف
-          </div>
-          <div className="font-extrabold text-2xl tracking-tight">فلزیافت</div>
+        <Link to="/" className="relative">
+          <Wordmark sub={<span className="text-sidebar-foreground/60">خرید نقدی ضایعات مس</span>} />
         </Link>
 
-        <Card className="p-6 md:p-8" style={{ boxShadow: "var(--shadow-soft)" }}>
+        <div className="relative">
+          <div className="animate-float mb-10 w-fit">
+            <BrandMark size={110} className="drop-shadow-[0_30px_50px_oklch(0.73_0.145_52/0.55)]" />
+          </div>
+          <h2 className="text-4xl xl:text-5xl font-black leading-tight tracking-tight">
+            هر کیلو مس،
+            <br />
+            <span className="copper-text">یک قدم به پول نقد</span>
+          </h2>
+          <p className="mt-5 text-sidebar-foreground/70 leading-8 max-w-md">
+            محموله‌ات را ثبت کن، کارشناس ما قیمت‌گذاری می‌کند و بعد از توزین شفاف، پولت آنی به کیف پولت می‌آید.
+          </p>
+          <div className="mt-10 space-y-3 max-w-sm">
+            {[
+              { icon: Sparkles, t: "قیمت‌گذاری بر پایه نرخ زنده مس و دلار" },
+              { icon: Scale, t: "توزین در باسکول مرجع، جلوی چشم خودت" },
+              { icon: Coins, t: "تسویه لحظه‌ای به شماره شبا" },
+            ].map((x) => (
+              <div key={x.t} className="flex items-center gap-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/10 px-4 py-3 text-sm font-semibold">
+                <x.icon className="w-4 h-4 text-primary shrink-0" />
+                {x.t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative text-xs text-sidebar-foreground/50">© فلزیافت · felezyaft.ir</div>
+      </aside>
+
+      {/* Form panel */}
+      <main className="relative flex items-center justify-center px-4 py-12">
+        <div className="absolute top-4 left-4">
+          <ThemeToggle />
+        </div>
+
+        <div className="w-full max-w-md animate-rise">
+          <Link to="/" className="flex justify-center mb-8 lg:hidden">
+            <Wordmark />
+          </Link>
+
+          <div className="mb-7">
+            <h1 className="text-3xl font-black tracking-tight">خوش آمدی</h1>
+            <p className="text-sm text-muted-foreground mt-2">وارد حسابت شو یا در کمتر از یک دقیقه ثبت‌نام کن.</p>
+          </div>
+
+          <Card className="p-6 md:p-7">
           <Tabs defaultValue="signin">
             <TabsList className="grid grid-cols-2 w-full mb-6">
               <TabsTrigger value="signin">ورود به حساب</TabsTrigger>
@@ -121,7 +165,7 @@ function AuthPage() {
                     dir="ltr"
                   />
                 </div>
-                <Button type="submit" className="w-full text-base py-5" disabled={loading}>
+                <Button type="submit" className="w-full h-12 text-base" disabled={loading}>
                   {loading ? "در حال بررسی..." : "ورود به سامانه"}
                 </Button>
               </form>
@@ -174,7 +218,7 @@ function AuthPage() {
                     dir="ltr"
                   />
                 </div>
-                <Button type="submit" className="w-full text-base py-5" disabled={loading}>
+                <Button type="submit" className="w-full h-12 text-base" disabled={loading}>
                   {loading ? "در حال ایجاد حساب..." : "ایجاد حساب کاربری"}
                 </Button>
               </form>
@@ -182,45 +226,48 @@ function AuthPage() {
           </Tabs>
 
           {/* Quick Demo Access Buttons */}
-          <div className="mt-8 pt-6 border-t border-border/70">
-            <div className="text-xs text-muted-foreground text-center mb-3">
-              ورود سریع با حساب‌های آزمایشی:
+          <div className="mt-7">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
+              <span className="h-px flex-1 bg-border" />
+              ورود سریع با حساب‌های آزمایشی
+              <span className="h-px flex-1 bg-border" />
             </div>
             <div className="grid grid-cols-3 gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs h-auto py-2 flex flex-col gap-1 items-center"
+                className="text-xs h-auto py-3 flex flex-col gap-1.5 items-center rounded-2xl"
                 disabled={loading}
                 onClick={() => quickLogin("admin@felezyaft.ir", "admin123456")}
               >
-                <ShieldCheck className="w-4 h-4 text-primary" />
+                <ShieldCheck className="!size-5 text-primary" />
                 <span>مدیر کل</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs h-auto py-2 flex flex-col gap-1 items-center"
+                className="text-xs h-auto py-3 flex flex-col gap-1.5 items-center rounded-2xl"
                 disabled={loading}
                 onClick={() => quickLogin("expert@felezyaft.ir", "expert123456")}
               >
-                <Wrench className="w-4 h-4 text-accent" />
+                <Wrench className="!size-5 text-accent" />
                 <span>کارشناس</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs h-auto py-2 flex flex-col gap-1 items-center"
+                className="text-xs h-auto py-3 flex flex-col gap-1.5 items-center rounded-2xl"
                 disabled={loading}
                 onClick={() => quickLogin("seller@felezyaft.ir", "seller123456")}
               >
-                <UserCheck className="w-4 h-4 text-success" />
+                <UserCheck className="!size-5 text-success" />
                 <span>فروشنده</span>
               </Button>
             </div>
           </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 }
