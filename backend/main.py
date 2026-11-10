@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.database import Base, engine
+from backend import models
 from backend.seed import seed_database
 from backend.routers import auth, profile, pricing, shipments, wallet, admin
 
