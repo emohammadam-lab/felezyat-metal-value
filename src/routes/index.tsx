@@ -435,20 +435,18 @@ function Landing() {
 
       {/* ───────────── CTA band ───────────── */}
       <section className="mx-auto w-full max-w-6xl px-4 pb-20">
-        <div className="relative overflow-hidden rounded-[2rem] copper-fill px-6 py-12 md:px-14 md:py-16">
-          <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
-          <div className="absolute -left-10 -top-10 opacity-30 animate-float pointer-events-none">
-            <BrandMark size={180} />
-          </div>
+        <div className="relative overflow-hidden rounded-[2rem] copper-fill px-6 py-12 md:px-14 md:py-16 shadow-2xl">
+          <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
+          <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight">ضایعاتت را دور نریز، پول است!</h2>
-              <p className="mt-3 text-sm md:text-base font-medium opacity-80 max-w-lg leading-7">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white drop-shadow-sm">ضایعاتت را دور نریز، پول است!</h2>
+              <p className="mt-3 text-sm md:text-base font-medium text-white/85 max-w-lg leading-7">
                 ثبت‌نام کمتر از یک دقیقه طول می‌کشد. کارشناس ما هماهنگ می‌کند و بقیه کارها با ماست.
               </p>
             </div>
             <Link to="/auth">
-              <Button size="lg" className="bg-[oklch(0.18_0.02_255)] bg-none text-white hover:bg-[oklch(0.24_0.02_255)] shadow-xl gap-2">
+              <Button size="lg" className="bg-[oklch(0.18_0.02_255)] bg-none text-white hover:bg-[oklch(0.24_0.02_255)] shadow-xl gap-2 font-bold px-6">
                 همین الان شروع کن
                 <ArrowLeft className="w-4 h-4" />
               </Button>
