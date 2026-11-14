@@ -152,21 +152,19 @@ function Landing() {
 
           {/* Live price card */}
           <div className="relative animate-rise [animation-delay:150ms]">
-            <div className="absolute -top-10 -left-6 hidden md:block animate-float pointer-events-none">
-              <BrandMark size={84} className="drop-shadow-[0_20px_40px_oklch(0.73_0.145_52/0.5)]" />
-            </div>
-            <div className="absolute -bottom-8 -right-4 hidden md:block animate-float [animation-delay:-3s] opacity-70 pointer-events-none">
-              <BrandMark size={52} />
-            </div>
+            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary/20 via-accent/10 to-transparent blur-xl pointer-events-none" />
 
             <div className="surface glow-ring relative rounded-3xl p-6 md:p-7 overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(30rem_16rem_at_0%_0%,oklch(0.73_0.145_52/0.16),transparent)] pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-bold text-muted-foreground">نرخ زنده مرجع</div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-success">
+                  <div className="flex items-center gap-2.5">
+                    <BrandMark size={28} className="rounded-lg shadow-sm ring-1 ring-border" />
+                    <span className="text-sm font-bold text-muted-foreground">نرخ زنده مرجع</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-success bg-success/10 px-2.5 py-1 rounded-full border border-success/20">
                     <span className="h-2 w-2 rounded-full bg-success animate-pulse-ring" />
-                    آنلاین
+                    آنلاین و لحظه‌ای
                   </div>
                 </div>
                 <div className="mt-6 text-xs text-muted-foreground">قیمت هر کیلو مس ۱۰۰٪ خلوص (تقریبی)</div>
