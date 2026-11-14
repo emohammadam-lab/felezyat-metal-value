@@ -358,3 +358,19 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Felezyaft Brand Logo Day/Night Mode Switching */
+.logo-dark-only {
+  display: inline-block;
+}
+.logo-light-only {
+  display: none;
+}
+
+html.light .logo-dark-only {
+  display: none !important;
+}
+html.light .logo-light-only {
+  display: inline-block !important;
+}
+

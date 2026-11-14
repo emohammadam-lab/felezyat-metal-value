@@ -34,6 +34,12 @@ def update_pricing(
     config.usd_rate = req.usd_rate
     config.fee_percent = req.fee_percent
     config.deduction_percent = req.deduction_percent
+    if req.logo_dark_url is not None:
+        config.logo_dark_url = req.logo_dark_url
+    if req.logo_light_url is not None:
+        config.logo_light_url = req.logo_light_url
+    if req.favicon_url is not None:
+        config.favicon_url = req.favicon_url
 
     db.commit()
     db.refresh(config)

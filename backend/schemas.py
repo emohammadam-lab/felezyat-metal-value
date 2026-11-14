@@ -70,6 +70,9 @@ class PricingResponse(BaseModel):
     usd_rate: int
     fee_percent: float
     deduction_percent: float
+    logo_dark_url: Optional[str] = "/logo-dark.png"
+    logo_light_url: Optional[str] = "/logo-light.png"
+    favicon_url: Optional[str] = "/favicon.ico"
     updated_at: datetime
 
     class Config:
@@ -81,6 +84,9 @@ class PricingUpdateRequest(BaseModel):
     usd_rate: int
     fee_percent: float
     deduction_percent: float
+    logo_dark_url: Optional[str] = None
+    logo_light_url: Optional[str] = None
+    favicon_url: Optional[str] = None
 
 
 # ---------------- Shipment ----------------

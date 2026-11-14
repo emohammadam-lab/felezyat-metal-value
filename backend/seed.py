@@ -1,12 +1,12 @@
 from backend.database import SessionLocal
-from backend.models import User, Profile, UserRole, Wallet, PricingConfig, Shipment
+from backend.models import User, Profile, UserRole, Wallet, PricingConfig, Shipment, SystemSetting
 from backend.auth import hash_password
 
 
 def seed_database():
     db = SessionLocal()
     try:
-        # 1. Pricing config
+        # 1. Pricing config & branding
         pricing = db.query(PricingConfig).filter(PricingConfig.id == 1).first()
         if not pricing:
             pricing = PricingConfig(
@@ -15,9 +15,37 @@ def seed_database():
                 usd_rate=900000,  # 900,000 Rials (90,000 Tomans)
                 fee_percent=3.00,
                 deduction_percent=2.00,
+                logo_dark_url="/logo-dark.png",
+                logo_light_url="/logo-light.png",
+                favicon_url="/favicon.ico",
             )
             db.add(pricing)
             db.commit()
+        else:
+            pricing.logo_dark_url = "/logo-dark.png"
+            pricing.logo_light_url = "/logo-light.png"
+            pricing.favicon_url = "/favicon.ico"
+            db.commit()
+
+        # 1.5 System Settings (Logos, Icons, Branding)
+        branding_settings = [
+            ("logo_dark", "/logo-dark.png", "لوگوی رسمی فلزیافت برای حالت شب"),
+            ("logo_light", "/logo-light.png", "لوگوی رسمی فلزیافت برای حالت روز"),
+            ("favicon", "/favicon.ico", "آیکون چندرزولوشنه تب مرورگر"),
+            ("apple_touch_icon", "/apple-touch-icon.png", "آیکون اپل و دستگاه‌های لمسی"),
+            ("icon_192", "/icon-192.png", "آیکون PWA ۱۹۲ پیکسل"),
+            ("icon_512", "/icon-512.png", "آیکون PWA ۵۱۲ پیکسل"),
+            ("site_title", "فلزیافت — سامانه هوشمند خرید و بازیافت فلزات", "عنوان سایت"),
+        ]
+        for key, val, desc in branding_settings:
+            item = db.query(SystemSetting).filter(SystemSetting.key == key).first()
+            if not item:
+                item = SystemSetting(key=key, value=val, description=desc)
+                db.add(item)
+            else:
+                item.value = val
+                item.description = desc
+        db.commit()
 
         # 2. Demo users
         demos = [

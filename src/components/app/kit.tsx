@@ -2,43 +2,56 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { STATUS_LABELS, STATUS_TONE } from "@/lib/format";
 
-/** Copper ingot brand mark — hexagonal nugget with the "ف" glyph. */
+/** Felezyaft brand mark — rounded app squircle icon with "FY" monogram and green arrow. */
 export function BrandMark({ size = 40, className }: { size?: number; className?: string }) {
   return (
     <span
-      className={cn("relative inline-flex items-center justify-center shrink-0", className)}
+      className={cn("relative inline-flex items-center justify-center shrink-0 rounded-2xl overflow-hidden shadow-sm", className)}
       style={{ width: size, height: size }}
     >
-      <svg viewBox="0 0 48 48" width={size} height={size} className="absolute inset-0" aria-hidden>
-        <defs>
-          <linearGradient id="fz-cu" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="oklch(0.86 0.12 75)" />
-            <stop offset="0.45" stopColor="oklch(0.74 0.15 55)" />
-            <stop offset="1" stopColor="oklch(0.56 0.15 38)" />
-          </linearGradient>
-        </defs>
-        <path d="M24 2 43 13v22L24 46 5 35V13Z" fill="url(#fz-cu)" />
-        <path d="M24 2 43 13 24 24 5 13Z" fill="white" opacity="0.18" />
-        <path d="M24 2 43 13v22L24 46 5 35V13Z" fill="none" stroke="white" strokeOpacity="0.25" />
-      </svg>
-      <span
-        className="relative font-black text-[oklch(0.2_0.04_40)]"
-        style={{ fontSize: size * 0.42, lineHeight: 1, marginTop: size * 0.04 }}
-      >
-        ف
-      </span>
+      <img
+        src="/apple-touch-icon.png"
+        alt="فلزیافت"
+        width={size}
+        height={size}
+        className="w-full h-full object-contain"
+        loading="eager"
+      />
+    </span>
+  );
+}
+
+/** Felezyaft full brand logo — auto switches between dark mode (logo-dark.png) and light mode (logo-light.png). */
+export function BrandLogo({ height = 40, className }: { height?: number; className?: string }) {
+  return (
+    <span className={cn("inline-flex items-center shrink-0 select-none", className)} style={{ height }}>
+      <img
+        src="/logo-dark.png"
+        alt="فلزیافت — Felezyaft"
+        className="logo-dark-only w-auto object-contain"
+        style={{ height }}
+        loading="eager"
+      />
+      <img
+        src="/logo-light.png"
+        alt="فلزیافت — Felezyaft"
+        className="logo-light-only w-auto object-contain"
+        style={{ height }}
+        loading="eager"
+      />
     </span>
   );
 }
 
 export function Wordmark({ sub, className }: { sub?: ReactNode; className?: string }) {
   return (
-    <span className={cn("flex items-center gap-2.5", className)}>
-      <BrandMark size={38} />
-      <span className="leading-tight">
-        <span className="block font-black text-lg tracking-tight">فلزیافت</span>
-        {sub && <span className="block text-[11px] text-muted-foreground font-medium">{sub}</span>}
-      </span>
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      <BrandLogo height={38} />
+      {sub && (
+        <span className="hidden sm:inline-block border-r border-border/60 pr-3 mr-0.5 text-xs text-muted-foreground font-medium leading-none">
+          {sub}
+        </span>
+      )}
     </span>
   );
 }

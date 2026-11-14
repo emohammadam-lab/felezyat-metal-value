@@ -77,6 +77,18 @@ class PricingConfig(Base):
     usd_rate = Column(BigInteger, default=900000, nullable=False)  # in Rials
     fee_percent = Column(Float, default=3.00, nullable=False)
     deduction_percent = Column(Float, default=2.00, nullable=False)
+    logo_dark_url = Column(String(255), default="/logo-dark.png", nullable=True)
+    logo_light_url = Column(String(255), default="/logo-light.png", nullable=True)
+    favicon_url = Column(String(255), default="/favicon.ico", nullable=True)
+    updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+
+class SystemSetting(Base):
+    __tablename__ = "system_settings"
+
+    key = Column(String(100), primary_key=True)
+    value = Column(Text, nullable=False)
+    description = Column(String(255), default="")
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
 
 
