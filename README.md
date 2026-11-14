@@ -1,26 +1,75 @@
-# Lovable Launchpad
+# فلزیافت (Felezyaft)
 
-این ایده کسب و کار که در یک اپلیکیشن کاربر میتونه باهاش کار کنه میخوام یه نسحه اولیه  و حرفه ای ازش برام درست کنی
+پلتفرم هوشمند کشف قیمت، خرید، ثبت و بازیافت ضایعات فلزی و مس (B2C / B2B)
 
-This project was built with [Lovable](https://lovable.dev).
+---
 
-**Live app**: https://flaziyat-metal-value.lovable.app
+## 🚀 ویژگی‌های کلیدی
+- **قیمت‌گذاری لحظه‌ای مس و ضایعات فلزی:** محاسبه خودکار بر اساس نرخ جهانی انس/دلار و قیمت روز.
+- **جریان ثبت سفارش آسان:** امکان ثبت محموله ضایعات با آپلود تصاویر، تعیین نوع و وزن تقریبی.
+- **پنل کارشناسی متالورژی:** کارشناسی دقیق، ثبت درصد خلوص، افت و کسورات پالایش و وزن‌کشی باسکول.
+- **کیف پول و تسویه حساب آنی:** امکان ثبت درخواست تسویه به شماره شبا، ثبت کد رهگیری بانکی و پیگیری تراکنش‌ها.
+- **پنل مدیریت (Admin):** مدیریت کاربران، تایید هویت (KYC)، تغییر قیمت‌ها و نظارت بر گردش مالی.
+- **طراحی مدرن و کاملاً واکنش‌گرا:** رابط کاربری تیره (Dark Mode) و روشن (Light Mode) با هماهنگی کامل فونت‌های فارسی.
 
-## Build with Lovable
+---
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/ee75934d-e114-4d86-b95c-cbb94444c59e).
+## 🛠 معماری و تکنولوژی‌ها
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+### فرانت‌اند (Frontend)
+- **فریم‌ورک:** React 19 با Vite 8
+- **مسیریابی:** TanStack Router & TanStack Start
+- **استایل‌دهی:** Tailwind CSS v4 + Radix UI Primitives
+- **مدیریت وضعیت:** TanStack Query
 
-## Development
+### بک‌اند (Backend)
+- **فریم‌ورک:** Python FastAPI
+- **پایگاه‌داده:** SQLite با پشتیبانی از SQLAlchemy ORM
+- **مستندات API:** Swagger UI خودکار روی `/docs`
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+---
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+## 🏁 راه‌اندازی سریع
+
+ساده‌ترین روش برای اجرای هم‌زمان فرانت‌اند و بک‌اند، استفاده از اسکریپت راه‌انداز است:
+
+```bash
+chmod +x ./start-all.sh
+./start-all.sh
+```
+
+### اجرای دستی سرویس‌ها
+
+**۱. اجرای بک‌اند (FastAPI):**
+```bash
+./backend/venv/bin/python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+**۲. اجرای فرانت‌اند (Vite):**
+```bash
+npm run dev -- --host 0.0.0.0 --port 5173
+```
+
+---
+
+## 🌐 پورت‌ها و آدرس‌های محلی
+
+| سرویس | آدرس محلی | توضیحات |
+| :--- | :--- | :--- |
+| **فرانت‌اند** | `http://localhost:5173` | رابط کاربری برنامه |
+| **بک‌اند** | `http://localhost:8000` | سرور و APIها |
+| **مستندات Swagger** | `http://localhost:8000/docs` | تست تعاملی اندپوینت‌های API |
+| **OpenAPI Spec** | `http://localhost:8000/openapi.json` | مشخصات OpenAPI |
+
+---
+
+## 📁 ساختار پروژه
+
+```text
+├── backend/          # کدهای پایتون (مدل‌ها، روت‌ها، دیتابیس و اعتبارسنجی)
+├── src/              # کدهای فرانت‌اند (کامپوننت‌ها، صفحات و روت‌ها)
+├── public/           # فایل‌های استاتیک و لوگوهای روز/شب
+├── felezyaft.db      # دیتابیس SQLite پروژه
+├── start-all.sh      # اسکریپت اجرای یکپارچه سرویس‌ها
+└── old-love/         # آرشیو فایل‌ها و مایگریشن‌های قدیمی Lovable
 ```

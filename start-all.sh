@@ -15,7 +15,14 @@ BACKEND_PID=$!
 
 # 2. Run Vite Frontend
 echo "-> در حال اجرای فرانت‌اند (Vite/TanStack) روی پورت 5173..."
-bun run --bun vite dev --host 0.0.0.0 --port 5173 &
+if command -v bun >/dev/null 2>&1; then
+  bun run --bun vite dev --host 0.0.0.0 --port 5173 &
+elif [ -f "$HOME/.nodejs/bin/npx" ]; then
+  export PATH="$HOME/.nodejs/bin:$PATH"
+  npx vite dev --host 0.0.0.0 --port 5173 &
+else
+  npx vite dev --host 0.0.0.0 --port 5173 &
+fi
 FRONTEND_PID=$!
 
 cleanup() {
