@@ -352,9 +352,9 @@ function Landing() {
             const f = FEATURES[0];
             return (
               <div className="group relative overflow-hidden rounded-3xl p-7 md:row-span-2 flex flex-col justify-between min-h-[22rem] border border-primary/30 bg-gradient-to-br from-primary/20 via-primary/5 to-card glow-ring transition-transform hover:-translate-y-1">
-                <div className="absolute inset-0 bg-grid opacity-60 pointer-events-none" />
-                <BrandMark size={190} className="absolute -left-12 -top-10 opacity-15 rotate-12 transition-transform duration-700 group-hover:rotate-0" />
-                <div className="relative h-14 w-14 rounded-2xl copper-fill flex items-center justify-center">
+                <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none" />
+                <div className="absolute -left-12 -top-10 h-44 w-44 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
+                <div className="relative h-14 w-14 rounded-2xl copper-fill flex items-center justify-center shadow-lg">
                   <f.icon className="w-6 h-6" />
                 </div>
                 <div className="relative">

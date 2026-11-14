@@ -24,7 +24,7 @@ import {
   Box,
   Wrench,
 } from "lucide-react";
-import { BrandMark, Spinner, StatCard, StatusPill } from "@/components/app/kit";
+import { Spinner, StatCard, StatusPill } from "@/components/app/kit";
 import { api, type Shipment, type AdminStats } from "@/lib/api";
 import { useAuth } from "@/lib/use-auth";
 import { formatToman, formatNumber, SCRAP_TYPE_LABELS, formatDate } from "@/lib/format";
@@ -98,7 +98,7 @@ function Dashboard() {
         <div className="absolute inset-0 bg-grid opacity-70 pointer-events-none" />
         <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/25 blur-[90px] pointer-events-none" />
         <div className="absolute -bottom-28 right-1/3 h-56 w-56 rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
-        <BrandMark size={150} className="absolute -left-6 -bottom-10 opacity-[0.12] rotate-12 hidden sm:inline-flex" />
+        <div className="absolute -left-6 -bottom-10 h-48 w-48 rounded-full bg-primary/10 blur-3xl pointer-events-none hidden sm:block" />
 
         <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
