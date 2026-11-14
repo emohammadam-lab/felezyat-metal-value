@@ -178,7 +178,7 @@ function WalletPage() {
             <div className="flex items-center gap-2 text-sm text-primary-foreground/90 font-medium">
               <Wallet className="w-5 h-5" /> موجودی نقدی قابل برداشت
             </div>
-            <div className="text-3xl md:text-5xl font-black mt-2 tracking-tight">
+            <div className="text-3xl sm:text-4xl md:text-5xl font-black mt-2 leading-none">
               {formatToman(balance)}
             </div>
           </div>

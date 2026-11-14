@@ -92,12 +92,12 @@ function AuthPage() {
           <div className="animate-float mb-10 w-fit">
             <BrandMark size={110} className="drop-shadow-[0_30px_50px_oklch(0.73_0.145_52/0.55)]" />
           </div>
-          <h2 className="text-4xl xl:text-5xl font-black leading-tight tracking-tight">
+          <h2 className="text-3xl xl:text-4xl font-black leading-snug">
             هر کیلو مس،
             <br />
             <span className="copper-text">یک قدم به پول نقد</span>
           </h2>
-          <p className="mt-5 text-sidebar-foreground/70 leading-8 max-w-md">
+          <p className="mt-5 text-sidebar-foreground/75 text-sm sm:text-base leading-relaxed max-w-md">
             محموله‌ات را ثبت کن، کارشناس ما قیمت‌گذاری می‌کند و بعد از توزین شفاف، پولت آنی به کیف پولت می‌آید.
           </p>
           <div className="mt-10 space-y-3 max-w-sm">
@@ -129,8 +129,8 @@ function AuthPage() {
           </Link>
 
           <div className="mb-7">
-            <h1 className="text-3xl font-black tracking-tight">خوش آمدی</h1>
-            <p className="text-sm text-muted-foreground mt-2">وارد حسابت شو یا در کمتر از یک دقیقه ثبت‌نام کن.</p>
+            <h1 className="text-2xl sm:text-3xl font-black leading-snug">خوش آمدی</h1>
+            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">وارد حسابت شو یا در کمتر از یک دقیقه ثبت‌نام کن.</p>
           </div>
 
           <Card className="p-6 md:p-7">

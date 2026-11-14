@@ -79,8 +79,8 @@ export function PageHeader({
         )}
         <div>
           {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
-          <h1 className="text-2xl md:text-[2rem] font-black tracking-tight leading-tight">{title}</h1>
-          {description && <p className="text-sm text-muted-foreground mt-1.5 max-w-2xl leading-6">{description}</p>}
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black leading-snug">{title}</h1>
+          {description && <p className="text-xs sm:text-sm text-muted-foreground mt-2 max-w-2xl leading-relaxed">{description}</p>}
         </div>
       </div>
       {actions && <div className="flex flex-wrap gap-2 shrink-0">{actions}</div>}
@@ -123,7 +123,7 @@ export function StatCard({
           <Icon className="w-[18px] h-[18px]" />
         </div>
       </div>
-      <div className="mt-3 text-xl md:text-2xl font-black tracking-tight truncate">{value}</div>
+      <div className="mt-3 text-xl md:text-2xl font-black truncate">{value}</div>
       {hint && <div className="mt-1 text-[11px] text-muted-foreground">{hint}</div>}
     </div>
   );

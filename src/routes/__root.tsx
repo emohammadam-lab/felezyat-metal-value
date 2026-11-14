@@ -19,8 +19,8 @@ function NotFoundComponent() {
       <div className="absolute inset-0 bg-grid pointer-events-none" />
       <div className="relative max-w-md text-center">
         <div className="text-[7rem] leading-none font-black copper-text">۴۰۴</div>
-        <h2 className="mt-4 text-2xl font-black text-foreground">این صفحه پیدا نشد</h2>
-        <p className="mt-2 text-sm text-muted-foreground">صفحه‌ای که دنبالش هستی وجود ندارد یا جابه‌جا شده است.</p>
+        <h2 className="mt-4 text-2xl sm:text-3xl font-black leading-snug text-foreground">این صفحه پیدا نشد</h2>
+        <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">صفحه‌ای که دنبالش هستی وجود ندارد یا جابه‌جا شده است.</p>
         <div className="mt-8">
           <Link to="/" className="inline-flex items-center justify-center rounded-xl copper-fill px-6 h-11 text-sm font-bold">
             بازگشت به خانه
@@ -41,7 +41,7 @@ function ErrorComponent({ error, reset }: { error: any; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-xl sm:text-2xl font-bold leading-snug text-foreground">
           این صفحه بارگذاری نشد
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">

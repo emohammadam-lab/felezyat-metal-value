@@ -124,12 +124,12 @@ function Landing() {
               <span className="rounded-full copper-fill px-2 py-0.5 text-[10px]">جدید</span>
               فاز پایلوت در تهران فعال شد
             </div>
-            <h1 className="text-[2.6rem] leading-[1.15] md:text-6xl md:leading-[1.12] font-black tracking-tight">
+            <h1 className="text-[2.35rem] sm:text-5xl lg:text-6xl font-black leading-[1.28] md:leading-[1.22]">
               ضایعات مس‌ات را
               <br />
               <span className="copper-text bg-[length:200%_auto] animate-shine">همین امروز نقد کن</span>
             </h1>
-            <p className="mt-6 text-base md:text-lg text-muted-foreground leading-8 max-w-xl">
+            <p className="lead mt-6 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl">
               قیمت را همین‌جا ببین؛ ما رایگان می‌آییم درب منزل، کارگاه یا انبار، جلوی چشمت توزین می‌کنیم و پولت همان لحظه به حسابت می‌نشیند.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -292,7 +292,7 @@ function Landing() {
                 <Sparkles className="w-3.5 h-3.5" />
                 تخمین فلزیافت
               </div>
-              <div className="mt-4 text-4xl md:text-5xl font-black tracking-tight break-words">
+              <div className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black leading-tight break-words">
                 {weight ? (
                   <>
                     {formatNumber(estimate)}
@@ -438,8 +438,8 @@ function Landing() {
           <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white drop-shadow-sm">ضایعاتت را دور نریز، پول است!</h2>
-              <p className="mt-3 text-sm md:text-base font-medium text-white/85 max-w-lg leading-7">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-snug text-white drop-shadow-sm">ضایعاتت را دور نریز، پول است!</h2>
+              <p className="mt-3 text-sm md:text-base font-medium text-white/90 max-w-lg leading-relaxed">
                 ثبت‌نام کمتر از یک دقیقه طول می‌کشد. کارشناس ما هماهنگ می‌کند و بقیه کارها با ماست.
               </p>
             </div>
@@ -465,14 +465,14 @@ function Landing() {
 
 function SectionTitle({ eyebrow, title, desc }: { eyebrow: string; title: string; desc?: string }) {
   return (
-    <div className="text-center">
-      <div className="eyebrow justify-center">
+    <div className="text-center max-w-2xl mx-auto">
+      <div className="eyebrow justify-center mb-2">
         <span className="h-px w-6 bg-primary/60" />
         {eyebrow}
         <span className="h-px w-6 bg-primary/60" />
       </div>
-      <h2 className="mt-3 text-3xl md:text-4xl font-black tracking-tight">{title}</h2>
-      {desc && <p className="mt-3 text-muted-foreground">{desc}</p>}
+      <h2 className="mt-2 text-2xl sm:text-3xl md:text-4xl font-black leading-snug">{title}</h2>
+      {desc && <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">{desc}</p>}
     </div>
   );
 }

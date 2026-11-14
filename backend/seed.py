@@ -27,7 +27,7 @@ def seed_database():
             pricing.favicon_url = "/favicon.ico"
             db.commit()
 
-        # 1.5 System Settings (Logos, Icons, Branding)
+        # 1.5 System Settings (Logos, Icons, Branding, Typography)
         branding_settings = [
             ("logo_dark", "/logo-dark.png", "لوگوی رسمی فلزیافت برای حالت شب"),
             ("logo_light", "/logo-light.png", "لوگوی رسمی فلزیافت برای حالت روز"),
@@ -36,6 +36,11 @@ def seed_database():
             ("icon_192", "/icon-192.png", "آیکون PWA ۱۹۲ پیکسل"),
             ("icon_512", "/icon-512.png", "آیکون PWA ۵۱۲ پیکسل"),
             ("site_title", "فلزیافت — سامانه هوشمند خرید و بازیافت فلزات", "عنوان سایت"),
+            ("font_family_primary", "Vazirmatn", "فونت اصلی سامانه (فونت استاندارد فارسی وزیرمتن)"),
+            ("font_family_fallback", "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, IRANSans, B Yekan, Tahoma, sans-serif", "فونت‌های پشتیبان سیستمی برای بارگذاری سریع"),
+            ("typography_headings", "وزن ۸۰۰ و ۹۰۰ با ارتفاع سطر ۱.۲۵ تا ۱.۳۵ (بدون تنگی حروف)", "استاندارد تایپوگرافی عناوین و تیترها"),
+            ("typography_body", "سایز ۱۵ پیکسل با ارتفاع سطر ۱.۷۵ برای حداکثر خوانایی", "استاندارد متن بدنه و پاراگراف‌ها"),
+            ("typography_lead", "سایز ۱۸ پیکسل با ارتفاع سطر ۱.۸ برای لید و مقدمه‌ها", "استاندارد متن لید"),
         ]
         for key, val, desc in branding_settings:
             item = db.query(SystemSetting).filter(SystemSetting.key == key).first()

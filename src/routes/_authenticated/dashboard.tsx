@@ -106,7 +106,7 @@ function Dashboard() {
               <Sparkles className="w-3.5 h-3.5" />
               {today}
             </div>
-            <h1 className="text-2xl md:text-4xl font-black tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black leading-snug">
               سلام {firstName}، <span className="copper-text">خوش آمدی</span>
             </h1>
             <p className="text-sm text-muted-foreground mt-2 flex items-center gap-2 flex-wrap">
